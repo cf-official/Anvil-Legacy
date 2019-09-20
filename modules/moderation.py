@@ -2,22 +2,28 @@ import discord
 from discord.ext import commands
 from support.bcolors import Bcolors
 
+
 class Moderation(commands.Cog):
     def __init__(self, client):
         self.client = client
 
-    # Kick/Ban/Unban
+    # Kick a user
     @commands.command()
+    @commands.has_permissions(manage_users=True)
     async def kick(self, ctx, member : discord.Member, *, reason=None):
         print(Bcolors.WARNING + f"{ctx.author} kicked {member}\nReason: {reason}")
         await member.kick(reason=reason)
 
+    # Ban a user
     @commands.command()
+    @commands.has_permissions(manage_users=True)
     async def ban(self, ctx, member: discord.Member, *, reason=None):
         print(Bcolors.WARNING + f"{ctx.author} banned {member}\nReason: {reason}")
         await member.ban(reason=reason)
 
+    # Un-ban a user
     @commands.command()
+    @commands.has_permissions(manage_users=True)
     async def unban(self, ctx, *, member):
         banned_users = await ctx.guild.bans()
         member_name, member_discriminator = member.split('#')
@@ -31,24 +37,16 @@ class Moderation(commands.Cog):
                 return
 
     @commands.command()
-    async def clear(self, ctx, amount=5):
+    @commands.has_permissions(manage_messages=True)
+    async def purge(self, ctx, amount=5):
         await ctx.channel.purge(limit=amount)
 
 
 def setup(client):
     client.add_cog(Moderation(client))
 
+
 """
-@client.event
-async def on_ready():
-    print('Bot is ready')
-
-
-
-@client.event
-async def on_member_remove(member):
-    print(f'{member} has left the server')
-
 @client.command(aliases=['8ball'])
 async def _8ball(ctx, *, question):
     responses = [   'It is certain',
@@ -75,10 +73,4 @@ async def _8ball(ctx, *, question):
                     'Very doubtful']
     await ctx.send(f'Q: {question}\n'
                    f'A: {random.choice(responses)}')
-
-
-
-
-
-
 """

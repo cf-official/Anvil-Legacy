@@ -1,6 +1,7 @@
 import discord
 from discord.ext import commands
 from support.bcolors import Bcolors
+from database import dbfunctions
 
 
 class Events(commands.Cog):
@@ -15,8 +16,24 @@ class Events(commands.Cog):
         print(Bcolors.NOTIFICATION + '------')
         for guild in self.client.guilds:
             print(f"Connected to server: {guild}")
+            dbfunctions.guild_add(guild)
         print('------')
         await self.client.change_presence(status=discord.Status.idle, activity=discord.Game('大家好！'))
+
+    # Guild interactions
+    @commands.Cog.listener()
+    async def on_guild_join(self, guild):
+        print(Bcolors.NOTIFICATION + '------')
+        print(f"Connected to server: {guild}")
+        print('------')
+        dbfunctions.guild_add(guild)
+
+    @commands.Cog.listener()
+    async def on_guild_remove(self, guild):
+        print(Bcolors.NOTIFICATION + '------')
+        print(f"Disconnected from server: {guild}")
+        print('------')
+        dbfunctions.guild_remove(guild)
 
     # Error listener
     @commands.Cog.listener()
@@ -28,10 +45,24 @@ class Events(commands.Cog):
         else:
             print(Bcolors.FAIL + f'[Error] {ctx.message.content} -> {error}')
 
-    # Members Joining/Leaving servers
+    # Member interaction
     @commands.Cog.listener()
     async def on_member_join(self, member):
-        print(f'{member} has joined {member.guild}.')
+        print(Bcolors.OKBLUE + f'{member} has joined {member.guild}.')
+
+    @commands.Cog.listener()
+    async def on_member_remove(self, member):
+        print(Bcolors.OKBLUE + f'{member} has left {member.guild}.')
+
+    # Message interaction
+    @commands.Cog.listener()
+    async def on_message(self, message):
+        user = message.author
+        if user.bot is False:
+            dbfunctions.update_user_messages(user, 1)
+            print(dbfunctions.check_user_last_message(user))
+            if dbfunctions.check_user_last_message(user):
+                dbfunctions.update_user_activity(user, 1)
 
 def setup(client):
     client.add_cog(Events(client))
