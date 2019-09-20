@@ -102,10 +102,10 @@ def check_user_last_message(user):
     if user.last_message is None:
         user.last_message = datetime.now()
     if services.difference_in_minutes(user.last_message, datetime.now()) > 1:
+        user.last_message = datetime.now()
         result = True
     else:
         result = False
-    user.last_message = datetime.now()
     session.commit()
     session.close()
     return result

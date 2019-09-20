@@ -59,9 +59,11 @@ class Events(commands.Cog):
     async def on_message(self, message):
         user = message.author
         if user.bot is False:
+            # Increment message count
             dbfunctions.update_user_messages(user, 1)
-            print(dbfunctions.check_user_last_message(user))
+            # Check if last message sent was longer than a minute ago
             if dbfunctions.check_user_last_message(user):
+                # Add to activity score
                 dbfunctions.update_user_activity(user, 1)
 
 def setup(client):
