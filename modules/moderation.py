@@ -1,4 +1,5 @@
 import discord
+from database import dbfunctions
 from discord.ext import commands
 from support.bcolors import Bcolors
 
@@ -9,21 +10,21 @@ class Moderation(commands.Cog):
 
     # Kick a user
     @commands.command()
-    @commands.has_permissions(manage_users=True)
+    @commands.has_permissions(kick_members=True)
     async def kick(self, ctx, member : discord.Member, *, reason=None):
         print(Bcolors.WARNING + f"{ctx.author} kicked {member}\nReason: {reason}")
         await member.kick(reason=reason)
 
     # Ban a user
     @commands.command()
-    @commands.has_permissions(manage_users=True)
+    @commands.has_permissions(ban_members=True)
     async def ban(self, ctx, member: discord.Member, *, reason=None):
         print(Bcolors.WARNING + f"{ctx.author} banned {member}\nReason: {reason}")
         await member.ban(reason=reason)
 
     # Un-ban a user
     @commands.command()
-    @commands.has_permissions(manage_users=True)
+    @commands.has_permissions(ban_members=True)
     async def unban(self, ctx, *, member):
         banned_users = await ctx.guild.bans()
         member_name, member_discriminator = member.split('#')
@@ -36,10 +37,26 @@ class Moderation(commands.Cog):
                 await ctx.guild.unban(user)
                 return
 
+    # Modify user statistics because they're cheating scum or smthng
     @commands.command()
     @commands.has_permissions(manage_messages=True)
     async def purge(self, ctx, amount=5):
         await ctx.channel.purge(limit=amount)
+
+    @commands.command()
+    @commands.has_permissions(kick_members=True)
+    async def modify_activity(self, ctx, user: discord.User, amount : int):
+        dbfunctions.update_user_activity(ctx.guild, user, amount)
+
+    @commands.command()
+    @commands.has_permissions(kick_members=True)
+    async def modify_message(self, ctx, user: discord.User, amount : int):
+        dbfunctions.update_user_messages(ctx.guild, user, amount)
+
+    @commands.command()
+    @commands.has_permissions(kick_members=True)
+    async def modify_karma(self, ctx, user: discord.User, amount : int):
+        dbfunctions.update_user_karma(ctx.guild, user, amount)
 
 
 def setup(client):

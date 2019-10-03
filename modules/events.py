@@ -1,6 +1,7 @@
 import discord
-from discord.ext import commands
+from discord.ext import tasks, commands
 from support.bcolors import Bcolors
+from support import services
 from database import dbfunctions
 
 
@@ -49,6 +50,7 @@ class Events(commands.Cog):
     @commands.Cog.listener()
     async def on_member_join(self, member):
         print(Bcolors.OKBLUE + f'{member} has joined {member.guild}.')
+        await services.set_user_auto_roles(member, member.guild)
 
     @commands.Cog.listener()
     async def on_member_remove(self, member):
@@ -59,12 +61,33 @@ class Events(commands.Cog):
     async def on_message(self, message):
         user = message.author
         if user.bot is False:
+            await services.set_user_auto_roles(user, user.guild)
             # Increment message count
-            dbfunctions.update_user_messages(user, 1)
+            dbfunctions.update_user_messages(user.guild, user, 1)
             # Check if last message sent was longer than a minute ago
             if dbfunctions.check_user_last_message(user):
                 # Add to activity score
-                dbfunctions.update_user_activity(user, 1)
+                dbfunctions.update_user_activity(user.guild, user, 1)
+
+    @commands.Cog.listener()
+    async def on_reaction_add(self, reaction, user):
+        # No giving karma to yourself or to bots
+        if reaction.message.author is not user and reaction.message.author.bot is False and user.bot is False:
+            guild_id = user.guild.id
+            emoji_id = reaction.emoji
+            try:
+                emoji_id = emoji_id.id
+            except AttributeError:
+                pass
+            except Exception as e:
+                print(Bcolors.FAIL +  f"[Error] {e} \nIn events.py : on_reaction_add")
+
+            if dbfunctions.check_reaction(str(emoji_id), guild_id):
+                # Give karma to user if karma event returns true (karma gain available from this person!
+                if dbfunctions.set_karma_event(user, reaction.message.author):
+                    print(Bcolors.OKBLUE + f"In {reaction.message.guild}, {user} gave {reaction.message.author} karma")
+                    dbfunctions.update_user_karma(user.guild, reaction.message.author, 1)
+
 
 def setup(client):
     client.add_cog(Events(client))
