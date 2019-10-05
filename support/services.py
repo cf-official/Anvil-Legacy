@@ -91,5 +91,7 @@ async def set_user_auto_roles(user, guild):
     # Actually add/remove roles here
     if bool(allowed_roles):
         await user.add_roles(*allowed_roles, reason="Automatic role update")
+        print(Bcolors.OKBLUE + f"{user.guild}: added auto roles to {user}")
     if bool(not_allowed_roles):
         await user.remove_roles(*not_allowed_roles, reason="Automatic role update")
+        print(Bcolors.OKBLUE + f"{user.guild}: removed auto roles from {user}")

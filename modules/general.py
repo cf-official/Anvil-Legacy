@@ -6,7 +6,6 @@ from support import services
 from database import dbfunctions
 
 
-
 class General(commands.Cog):
     def __init__(self, client):
         self.client = client
@@ -18,12 +17,14 @@ class General(commands.Cog):
         await ctx.send(f'Pong! ({round(self.client.latency * 1000)}ms)')
 
     @commands.command(aliases=['uinfo', 'ui'])
-    async def userinfo(self, ctx, *, user = None):
+    async def userinfo(self, ctx, *, user=None):
 
         # Fetch relevant user and accompanying roles
         user = Search.search_user(ctx, user)
         dbuser = dbfunctions.retrieve_user(user)
         roles = [role for role in user.roles]
+        # Slice @@everyone out of the list
+        roles = roles[1:]
 
         # Create embed
         embed = discord.Embed(colour=user.color, timestamp=ctx.message.created_at, title="*Questions?*", url=cfg.embed_url)
@@ -36,14 +37,19 @@ class General(commands.Cog):
         embed.add_field(name="Created at:", value=user.created_at.strftime("%a, %#d %B %Y, %I:%M %p UTC"), inline=False)
         embed.add_field(name="Joined at:", value=user.joined_at.strftime("%a, %#d %B %Y, %I:%M %p UTC"), inline=False)
 
-        embed.add_field(name=f"Roles ({len(roles)}):", value=" ".join([role.mention for role in roles]), inline=False)
-        embed.add_field(name="Top role:", value=user.top_role.mention, inline=True)
+        # Make sure roles are listed correctly, even if empty
+        if roles:
+            embed.add_field(name=f"Roles ({len(roles)}):", value=" ".join([role.mention for role in roles]), inline=False)
+            embed.add_field(name="Top role:", value=user.top_role.mention, inline=True)
+        else:
+            embed.add_field(name="Roles (0):", value="None")
+            embed.add_field(name="Top role:", value="None", inline=True)
 
         embed.add_field(name="Bot?", value=user.bot, inline=True)
-        embed.add_field(name="User stats", value=":e_mail: Messages sent: " + str(dbuser.messages_sent) +
-                                                 " :speaking_head: Activity: " + str(dbuser.activity_points) +
-                                                 " :angel: Karma: " + str(dbuser.karma), inline=False)
-
+        embed.add_field(name="User involvement", value=":e_mail: Messages sent: " + str(
+            dbuser.messages_sent) + " :speaking_head: Activity: " + str(dbuser.activity_points), inline=False)
+        embed.add_field(name="User stats", value=":angel: Karma: " + str(dbuser.karma) +
+                                                 " :moneybag: Tokens: " + str(dbuser.tokens), inline=False)
         await ctx.send(embed=embed)
 
     @commands.command(aliases=['sinfo', 'si'])
@@ -116,7 +122,36 @@ class General(commands.Cog):
 
         # Set fields
         embed.add_field(name=f"Roles({len(roles)}):", value=roles_string)
+        await ctx.send(embed=embed)
 
+    @commands.command(aliases=['lboard', 'lb'])
+    async def leaderboard(self, ctx, lbtype=None):
+        embed = discord.Embed(colour=self.client.user.color, timestamp=ctx.message.created_at, title="*Questions?*",
+                              url=cfg.embed_url)
+        top_results = dbfunctions.retrieve_top_users(ctx.guild.id)
+        # Check if lbtype matches any, else post default leaderboard
+        if lbtype == "messages":
+            embed.add_field(name="Leaderboard :e_mail: messages", value="\n".join(
+                [str(count) + ". " + x.name + " (" + str(x.messages_sent) + ")" for count, x in
+                 enumerate(top_results.top_messages, start=1)]))
+        elif lbtype == "activity":
+            embed.add_field(name="Leaderboard :speaking_head: activity", value="\n".join(
+                [str(count) + ". " + x.name + " (" + str(x.activity_points) + ")" for count, x in
+                 enumerate(top_results.top_activity, start=1)]))
+        elif lbtype == "karma":
+            embed.add_field(name="Leaderboard :angel: karma", value="\n".join(
+                [str(count) + ". " + x.name + " (" + str(x.karma) + ")" for count, x in
+                 enumerate(top_results.top_karma, start=1)]))
+        elif lbtype == "tokens":
+            embed.add_field(name="Leaderboard :moneybag: tokens", value="\n".join(
+                [str(count) + ". " + x.name + " (" + str(x.tokens) + ")" for count, x in
+                 enumerate(top_results.top_tokens, start=1)]))
+        # No leaderboard type was given, ergo this was used
+        else:
+            embed.add_field(name="Leaderboard usage", value=".leaderboard messages\n"
+                                                            ".leaderboard activity\n"
+                                                            ".leaderboard karma\n"
+                                                            ".leaderboard tokens")
         await ctx.send(embed=embed)
 
 

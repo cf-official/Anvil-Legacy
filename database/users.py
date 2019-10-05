@@ -1,5 +1,6 @@
 from sqlalchemy import Column, String, Integer, DateTime
 from database.dbbase import Base
+from datetime import datetime
 
 
 class User(Base):
@@ -10,13 +11,15 @@ class User(Base):
     user_id = Column(String)
     messages_sent = Column(Integer)
     activity_points = Column(Integer)
+    tokens = Column(Integer)
     karma = Column(Integer)
     last_message = Column(DateTime)
 
-    def __init__(self, name, user_id, messages_sent, acivity_points, karma, last_message):
+    def __init__(self, name, user_id):
         self.name = name
         self.user_id = user_id
-        self.messages_sent = messages_sent
-        self.activity_points = acivity_points
-        self.karma = karma
-        self.last_message = last_message
+        self.messages_sent = 0
+        self.activity_points = 0
+        self.tokens = 0
+        self.karma = 0
+        self.last_message = datetime.now()

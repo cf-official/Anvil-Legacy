@@ -1,6 +1,7 @@
 from sqlalchemy import Column, String, Integer, Date, Table, ForeignKey
 from sqlalchemy.orm import relationship
 from database.dbbase import Base
+from datetime import date
 # This imports are important because it changes loading order.
 from database import users
 from database import roles
@@ -33,10 +34,10 @@ class Guild(Base):
     users = relationship("User", secondary='guilds_users', cascade="save-update")
     roles = relationship("Role", secondary='guilds_roles', cascade="save-update")
 
-    def __init__(self, name, guild_id, join_date, prefix, attached, karma_emoji):
+    def __init__(self, name, guild_id):
         self.name = name
         self.guild_id = guild_id
-        self.join_date = join_date
-        self.prefix = prefix
-        self.attached = attached
-        self.karma_emoji = karma_emoji
+        self.join_date = date.today()
+        self.prefix = '.'
+        self.attached = True
+        self.karma_emoji = None

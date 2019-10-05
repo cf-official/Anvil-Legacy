@@ -11,7 +11,10 @@ class Moderation(commands.Cog):
     # Kick a user
     @commands.command()
     @commands.has_permissions(kick_members=True)
-    async def kick(self, ctx, member : discord.Member, *, reason=None):
+    async def kick(self, ctx, member: discord.Member, *, reason=None):
+        if member.guild_premissions.kick_members and not ctx.user.guild_permissions.administrator \
+                and not member.guild_premissions.administrator:
+            await ctx.send("Can't kick member with equal permission level!")
         print(Bcolors.WARNING + f"{ctx.author} kicked {member}\nReason: {reason}")
         await member.kick(reason=reason)
 
@@ -19,6 +22,9 @@ class Moderation(commands.Cog):
     @commands.command()
     @commands.has_permissions(ban_members=True)
     async def ban(self, ctx, member: discord.Member, *, reason=None):
+        if member.guild_premissions.ban_members and not ctx.user.guild_permissions.administrator \
+                and not member.guild_premissions.administrator:
+            await ctx.send("Can't kick member with equal permission level!")
         print(Bcolors.WARNING + f"{ctx.author} banned {member}\nReason: {reason}")
         await member.ban(reason=reason)
 

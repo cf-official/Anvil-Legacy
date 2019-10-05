@@ -17,7 +17,9 @@ class Events(commands.Cog):
         print(Bcolors.NOTIFICATION + '------')
         for guild in self.client.guilds:
             print(f"Connected to server: {guild}")
+            # Add guild to db, add all users of said guild to db afterwards (relational)
             dbfunctions.guild_add(guild)
+            dbfunctions.guild_add_users(guild)
         print('------')
         await self.client.change_presence(status=discord.Status.idle, activity=discord.Game('大家好！'))
 
@@ -27,7 +29,9 @@ class Events(commands.Cog):
         print(Bcolors.NOTIFICATION + '------')
         print(f"Connected to server: {guild}")
         print('------')
+        # Add guild to db, add all users of said guild to db afterwards (relational)
         dbfunctions.guild_add(guild)
+        dbfunctions.guild_add_users(guild)
 
     @commands.Cog.listener()
     async def on_guild_remove(self, guild):
@@ -35,7 +39,7 @@ class Events(commands.Cog):
         print(f"Disconnected from server: {guild}")
         print('------')
         dbfunctions.guild_remove(guild)
-
+    '''
     # Error listener
     @commands.Cog.listener()
     async def on_command_error(self, ctx, error):
@@ -45,7 +49,7 @@ class Events(commands.Cog):
             await ctx.send('You are using a faulty argument.')
         else:
             print(Bcolors.FAIL + f'[Error] {ctx.message.content} -> {error}')
-
+    '''
     # Member interaction
     @commands.Cog.listener()
     async def on_member_join(self, member):
@@ -65,7 +69,7 @@ class Events(commands.Cog):
             # Increment message count
             dbfunctions.update_user_messages(user.guild, user, 1)
             # Check if last message sent was longer than a minute ago
-            if dbfunctions.check_user_last_message(user):
+            if dbfunctions.check_user_last_message(user, user.guild.id):
                 # Add to activity score
                 dbfunctions.update_user_activity(user.guild, user, 1)
 
@@ -80,11 +84,11 @@ class Events(commands.Cog):
             except AttributeError:
                 pass
             except Exception as e:
-                print(Bcolors.FAIL +  f"[Error] {e} \nIn events.py : on_reaction_add")
+                print(Bcolors.FAIL + f"[Error] {e} \nIn events.py : on_reaction_add")
 
             if dbfunctions.check_reaction(str(emoji_id), guild_id):
-                # Give karma to user if karma event returns true (karma gain available from this person!
-                if dbfunctions.set_karma_event(user, reaction.message.author):
+                # Give karma to user if karma event returns true (karma gain available from this person!)
+                if dbfunctions.set_karma_event(user, reaction.message.author, guild_id):
                     print(Bcolors.OKBLUE + f"In {reaction.message.guild}, {user} gave {reaction.message.author} karma")
                     dbfunctions.update_user_karma(user.guild, reaction.message.author, 1)
 
