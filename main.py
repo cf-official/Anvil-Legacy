@@ -53,7 +53,7 @@ while True:
         client.loop.run_until_complete(client.run(cfg.token))
         sleep_timer = 5
     except BaseException:
-        services.logger("BOT_CLIENT", bcolors.Bcolors.RED + 'Waiting 5 seconds before next reconnection attempt...')
+        services.console_log("BOT_CLIENT", bcolors.Bcolors.RED, 'Waiting 5 seconds before next reconnection attempt...')
         sleep_timer += 5
         time.sleep(sleep_timer)
 

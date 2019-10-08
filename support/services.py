@@ -90,24 +90,33 @@ async def set_user_auto_roles(user, guild):
     # Actually add/remove roles here
     if bool(allowed_roles):
         await user.add_roles(*allowed_roles, reason="Automatic role update")
-        logger(user.guild, Bcolors.YELLOW, f"added auto roles to {user}")
+        console_log(user.guild, Bcolors.YELLOW, f"added auto roles to {user}")
     if bool(not_allowed_roles):
         await user.remove_roles(*not_allowed_roles, reason="Automatic role update")
-        logger(user.guild, Bcolors.YELLOW, f"removed auto from roles {user}")
+        console_log(user.guild, Bcolors.YELLOW, f"removed auto from roles {user}")
 
 
-# Takes messages and prints them to both the console and the determined log channel in the guild (if it exists)
-async def logger(arg_guild, arg_colour, arg_content):
+# Takes messages and prints them to both the console
+async def console_log(arg_guild, arg_colour, arg_content):
     # Time logging
     now = datetime.now()
     now_string = now.strftime("%d/%m/%Y %H:%M:%S")
-    print(Bcolors.CYAN + f"[{now_string}] - [{arg_guild}]\n" + arg_colour + f"{arg_content}")
+    print(Bcolors.CYAN + f"[{arg_guild}] - [{now_string}]\n" + arg_colour + f"{arg_content}")
     # Fetch log-channel status, if returns true post to there
     if not isinstance(arg_guild, str):
-        guild_data = dbfunctions.retrieve_guild(arg_guild)
-        if guild_data.log_channel_id:
-            try:
-                channel = arg_guild.get_channel(int(guild_data.log_channel_id))
-                await channel.send(f"```ini\n[{now_string}] - [{arg_guild}]\n{arg_content}\n```")
-            except Exception as e:
-                logger(arg_guild.name, Bcolors.RED, e)
+        await guild_log(arg_guild, arg_content)
+
+
+# Takes messages and prints them to the determined log channel in the guild (if it exists)
+async def guild_log(arg_guild, arg_content):
+    # Time logging
+    now = datetime.now()
+    now_string = now.strftime("%d/%m/%Y %H:%M:%S")
+    # Fetch log-channel status, if returns true post to there
+    guild_data = dbfunctions.retrieve_guild(arg_guild)
+    if guild_data.log_channel_id:
+        try:
+            channel = arg_guild.get_channel(int(guild_data.log_channel_id))
+            await channel.send(f"```ini\n[{now_string}]\n{arg_content}\n```")
+        except Exception as e:
+            console_log(arg_guild.name, Bcolors.RED, e)
