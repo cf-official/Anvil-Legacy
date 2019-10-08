@@ -46,9 +46,12 @@ class Administration(commands.Cog):
     # Set log_channel_id
     @commands.command()
     @commands.has_permissions(administrator=True)
-    async def set_log_channel_id(self, ctx, channel: discord.TextChannel):
+    async def set_log_channel_id(self, ctx, channel: discord.TextChannel = None):
         await services.logger(ctx.guild, Bcolors.MAGENTA, f"{ctx.author} set logging channel to {channel}")
-        dbfunctions.set_guild_log_channel(ctx.guild, channel.id)
+        if channel is None:
+            dbfunctions.set_guild_log_channel(ctx.guild, None)
+        else:
+            dbfunctions.set_guild_log_channel(ctx.guild, channel.id)
 
     @commands.command()
     @commands.has_permissions(administrator=True)

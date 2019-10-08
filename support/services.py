@@ -103,5 +103,8 @@ async def logger(arg_guild, arg_colour, arg_content):
     if not isinstance(arg_guild, str):
         guild_data = dbfunctions.retrieve_guild(arg_guild)
         if guild_data.log_channel_id:
-            channel = arg_guild.get_channel(int(guild_data.log_channel_id))
-            await channel.send(f"```ini\n[{arg_guild}] {arg_content}\n```")
+            try:
+                channel = arg_guild.get_channel(int(guild_data.log_channel_id))
+                await channel.send(f"```ini\n[{arg_guild}] {arg_content}\n```")
+            except Exception as e:
+                logger(arg_guild.name, Bcolors.RED, e)
