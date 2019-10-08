@@ -12,34 +12,34 @@ class Events(commands.Cog):
     # Ready notifications
     @commands.Cog.listener()
     async def on_ready(self):
-        print(Bcolors.SUCCES + 'Logged in as: ' + self.client.user.name)
-        print(Bcolors.SUCCES + 'Bot ID: ' + str(self.client.user.id))
-        print(Bcolors.NOTIFICATION + '------')
+        services.logger("BOT_CLIENT", Bcolors.GREEN + f"Logged in as: {self.client.user.name}")
+        services.logger("BOT_CLIENT", Bcolors.GREEN + f"Bot ID: {self.client.user.id}")
+        services.logger("BOT_CLIENT", Bcolors.YELLOW + "------")
         for guild in self.client.guilds:
-            print(f"Connected to server: {guild}")
+            services.logger(guild, Bcolors.YELLOW + "Connected.")
             # Add guild to db, add all users of said guild to db afterwards (relational)
             dbfunctions.guild_add(guild)
             dbfunctions.guild_add_users(guild)
-        print('------')
+        services.logger("BOT_CLIENT", Bcolors.YELLOW + "------")
         await self.client.change_presence(status=discord.Status.idle, activity=discord.Game('大家好！'))
 
     # Guild interactions
     @commands.Cog.listener()
     async def on_guild_join(self, guild):
-        print(Bcolors.NOTIFICATION + '------')
-        print(f"Connected to server: {guild}")
-        print('------')
+        services.logger("BOT_CLIENT", Bcolors.YELLOW + "------")
+        services.logger(guild, Bcolors.YELLOW + "Connected.")
+        services.logger("BOT_CLIENT", Bcolors.YELLOW + "------")
         # Add guild to db, add all users of said guild to db afterwards (relational)
         dbfunctions.guild_add(guild)
         dbfunctions.guild_add_users(guild)
 
     @commands.Cog.listener()
     async def on_guild_remove(self, guild):
-        print(Bcolors.NOTIFICATION + '------')
-        print(f"Disconnected from server: {guild}")
-        print('------')
+        services.logger("BOT_CLIENT", Bcolors.YELLOW + "------")
+        services.logger(guild, Bcolors.YELLOW + "Disconnected.")
+        services.logger("BOT_CLIENT", Bcolors.YELLOW + "------")
         dbfunctions.guild_remove(guild)
-    '''
+
     # Error listener
     @commands.Cog.listener()
     async def on_command_error(self, ctx, error):
@@ -48,17 +48,19 @@ class Events(commands.Cog):
         elif isinstance(error, commands.ArgumentParsingError):
             await ctx.send('You are using a faulty argument.')
         else:
-            print(Bcolors.FAIL + f'[Error] {ctx.message.content} -> {error}')
-    '''
+            services.logger(ctx.guild, Bcolors.RED + f"'{ctx.message.content}' resulted in;\n{error}")
+
     # Member interaction
     @commands.Cog.listener()
     async def on_member_join(self, member):
-        print(Bcolors.OKBLUE + f'{member} has joined {member.guild}.')
-        await services.set_user_auto_roles(member, member.guild)
+        services.logger(member.guild, Bcolors.LIGHT_BLUE + f"{member} joined.")
+        if not member.bot:
+            dbfunctions.add_user(member.guild, member)
+            await services.set_user_auto_roles(member, member.guild)
 
     @commands.Cog.listener()
     async def on_member_remove(self, member):
-        print(Bcolors.OKBLUE + f'{member} has left {member.guild}.')
+        services.logger(member.guild, Bcolors.LIGHT_BLUE + f"{member} left.")
 
     # Message interaction
     @commands.Cog.listener()
@@ -84,12 +86,13 @@ class Events(commands.Cog):
             except AttributeError:
                 pass
             except Exception as e:
+                services.logger(user.guild, Bcolors.RED+ f"{e}\nIn events.py : on_reaction_add")
                 print(Bcolors.FAIL + f"[Error] {e} \nIn events.py : on_reaction_add")
 
             if dbfunctions.check_reaction(str(emoji_id), guild_id):
                 # Give karma to user if karma event returns true (karma gain available from this person!)
                 if dbfunctions.set_karma_event(user, reaction.message.author, guild_id):
-                    print(Bcolors.OKBLUE + f"In {reaction.message.guild}, {user} gave {reaction.message.author} karma")
+                    services.logger(user.guild, Bcolors.YELLOW + f"{user} gave {reaction.message.author} karma.")
                     dbfunctions.update_user_karma(user.guild, reaction.message.author, 1)
 
 

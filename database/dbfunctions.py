@@ -3,7 +3,7 @@ from database.guilds import Guild
 from database.users import User
 from database.roles import Role
 from database.karma import KarmaEvents
-from support.services import AttrDict
+from support import services
 from datetime import datetime
 from support import services
 
@@ -28,10 +28,30 @@ def guild_add(arg_guild):
     session.close()
 
 
+# Mark guild as detached from bot in db
 def guild_remove(arg_guild):
     session = Session()
     guild = session.query(Guild).filter(Guild.guild_id == arg_guild.id).first()
     guild.attached = False
+    session.commit()
+    session.close()
+
+
+# Fetch the current possibly custom guild prefix
+def get_guild_prefix(arg_guild):
+    session = Session()
+    guild = session.query(Guild).filter(Guild.guild_id == arg_guild.id).first()
+    prefix = guild.prefix
+    session.commit()
+    session.close()
+    return prefix
+
+
+# Set new guild prefix
+def set_guild_prefix(arg_guild, arg_prefix):
+    session = Session()
+    guild = session.query(Guild).filter(Guild.guild_id == arg_guild.id).first()
+    guild.prefix = arg_prefix
     session.commit()
     session.close()
 
@@ -59,6 +79,18 @@ def guild_add_users(arg_guild):
                 new_user = User(user.name, user.id)
                 guild.users.append(new_user)
                 session.add(new_user)
+    session.commit()
+    session.close()
+
+
+# Add a single user to DB
+def add_user(arg_guild, arg_user):
+    # Prep session
+    session = Session()
+    guild = session.query(Guild).filter(Guild.guild_id == arg_guild.id).first()
+    new_user = User(arg_user.name, arg_user.id)
+    guild.users.append(new_user)
+    session.add(new_user)
     session.commit()
     session.close()
 
@@ -94,6 +126,7 @@ def update_user_karma(arg_guild, arg_user, arg_increment):
     session.close()
 
 
+# Store karma giving event with required datetime
 def set_karma_event(arg_user_giving, arg_user_receiving, arg_guild_id):
     session = Session()
 
@@ -126,7 +159,7 @@ def retrieve_user(arg_user):
     session = Session()
     guild = session.query(Guild).filter(Guild.guild_id == arg_user.guild.id).first()
     user = next((x for x in guild.users if int(x.user_id) == int(arg_user.id)), None)
-    dbuser = AttrDict()
+    dbuser = services.AttrDict()
     dbuser.update({"name" : user.name, "user_id": user.user_id, "messages_sent": user.messages_sent,
                    "activity_points": user.activity_points, "tokens": user.tokens, "karma": user.karma,
                    "last_message": user.last_message})
@@ -210,28 +243,28 @@ def retrieve_top_users(arg_guild_id):
     # Fetch top messages_sent
     temp_list = sorted(guild.users, key=lambda x: x.messages_sent, reverse=True)[:10]
     for x in temp_list:
-        dbuser = AttrDict()
+        dbuser = services.AttrDict()
         dbuser.update({"name": x.name, "messages_sent": x.messages_sent})
         top_messages.append(dbuser)
     # Fetch top activity points
     temp_list = sorted(guild.users, key=lambda x: x.activity_points, reverse=True)[:10]
     for x in temp_list:
-        dbuser = AttrDict()
+        dbuser = services.AttrDict()
         dbuser.update({"name": x.name, "activity_points": x.activity_points})
         top_activity.append(dbuser)
     # Fetch top karma
     temp_list = sorted(guild.users, key=lambda x: x.karma, reverse=True)[:10]
     for x in temp_list:
-        dbuser = AttrDict()
+        dbuser = services.AttrDict()
         dbuser.update({"name": x.name, "karma": x.karma})
         top_karma.append(dbuser)
     # Fetch top karma
     temp_list = sorted(guild.users, key=lambda x: x.tokens, reverse=True)[:10]
     for x in temp_list:
-        dbuser = AttrDict()
+        dbuser = services.AttrDict()
         dbuser.update({"name": x.name, "tokens": x.tokens})
         top_tokens.append(dbuser)
-    dbresults = AttrDict()
+    dbresults = services.AttrDict()
     dbresults.update({"top_messages": top_messages, "top_activity": top_activity,
                       "top_karma": top_karma, "top_tokens": top_tokens})
     session.commit()

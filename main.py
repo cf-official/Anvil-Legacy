@@ -2,7 +2,10 @@ import os
 from discord.ext import commands
 import time
 from support import config as cfg
+from support import services
+from support import bcolors
 from database.dbbase import initialize_sql
+from database import dbfunctions
 import sqlalchemy
 
 
@@ -11,8 +14,15 @@ SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://' + cfg.mysql['user'] + ':' + cfg.mys
 engine = sqlalchemy.create_engine(SQLALCHEMY_DATABASE_URI, echo=False)
 initialize_sql(engine)
 
+
+# Check custom guild prefix'
+def get_prefix(client, message):
+    prefix = [cfg.default_prefix, dbfunctions.get_guild_prefix(message.guild)]
+    return prefix
+
+
 # Chosen prefix
-client = commands.Bot(command_prefix = cfg.default_prefix)
+client = commands.Bot(command_prefix=get_prefix)
 
 
 # Loading modules
@@ -43,7 +53,7 @@ while True:
         client.loop.run_until_complete(client.run(cfg.token))
         sleep_timer = 5
     except BaseException:
-        print('Waiting 5 seconds before next reconnection attempt...')
+        services.logger("BOT_CLIENT", bcolors.Bcolors.RED + 'Waiting 5 seconds before next reconnection attempt...')
         sleep_timer += 5
         time.sleep(sleep_timer)
 

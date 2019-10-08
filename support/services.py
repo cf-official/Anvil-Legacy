@@ -9,8 +9,6 @@ import re
 class Search:
     @staticmethod
     def search_user(ctx, search):
-        print(Bcolors.OKBLUE + f'searching in {ctx.guild.name} for {search}')
-
         # Search by discord user
         user = next((i for i in ctx.guild.members if str(search).lower() in str(i).lower()), None)
         # Search by discord user nickname
@@ -91,7 +89,14 @@ async def set_user_auto_roles(user, guild):
     # Actually add/remove roles here
     if bool(allowed_roles):
         await user.add_roles(*allowed_roles, reason="Automatic role update")
-        print(Bcolors.OKBLUE + f"{user.guild}: added auto roles to {user}")
+        logger(user.guild, Bcolors.YELLOW + f"added auto roles to {user}")
     if bool(not_allowed_roles):
         await user.remove_roles(*not_allowed_roles, reason="Automatic role update")
-        print(Bcolors.OKBLUE + f"{user.guild}: removed auto roles from {user}")
+        logger(user.guild, Bcolors.YELLOW + f"removed auto from roles {user}")
+
+
+# Takes messages and prints them to both the console and the determined log channel in the guild (if it exists)
+def logger(arg_guild, arg_content):
+    # Print to console
+    print(Bcolors.CYAN + f"[{arg_guild}] {arg_content}")
+    # Fetch log-channel status, if returns true post to there

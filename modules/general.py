@@ -57,6 +57,9 @@ class General(commands.Cog):
         # Set up
         roles = [role for role in ctx.guild.roles]
         roles.reverse()
+        # Remove last role (@@everyone)
+        roles = [roles[0], roles[-1]]
+
         boosters = [booster for booster in ctx.guild.premium_subscribers]
         boosters.reverse()
         members_total = ctx.guild.members
@@ -75,7 +78,13 @@ class General(commands.Cog):
         # Set fields
         embed.add_field(name=f"Members: ({len(members_total)})", value=f"<:greendot:617798086403686432>{members_online} - <:reddot:617798085938118730>{members_offline} - 🤖 {members_bots}")
         embed.add_field(name="Created at:", value=ctx.guild.created_at.strftime("%a, %#d %B %Y, %I:%M %p UTC"))
-        embed.add_field(name=f"Roles ({len(roles)}):", value=" ".join([role.mention for role in roles]))
+
+        # Make sure roles are listed correctly, even if empty
+        if True:
+            embed.add_field(name=f"Roles ({len(roles)}):", value=" ".join([role.mention for role in roles]))
+        else:
+            embed.add_field(name="Roles (0):", value="None")
+
         # Show nitro boosters
         if not boosters:
             embed.add_field(name=f"Nitro boosters (0)", value="None ")
@@ -131,21 +140,28 @@ class General(commands.Cog):
         top_results = dbfunctions.retrieve_top_users(ctx.guild.id)
         # Check if lbtype matches any, else post default leaderboard
         if lbtype == "messages":
-            embed.add_field(name="Leaderboard :e_mail: messages", value="\n".join(
-                [str(count) + ". " + x.name + " (" + str(x.messages_sent) + ")" for count, x in
-                 enumerate(top_results.top_messages, start=1)]))
+            embed.add_field(name="Leaderboard", value="\n".join(
+                [str(count) + ". " + x.name for count, x in enumerate(top_results.top_messages, start=1)]), inline=True)
+            embed.add_field(name=":e_mail: messages sent",
+                            value="\n".join([str(x.messages_sent) for x in top_results.top_messages]), inline=True)
+
         elif lbtype == "activity":
-            embed.add_field(name="Leaderboard :speaking_head: activity", value="\n".join(
-                [str(count) + ". " + x.name + " (" + str(x.activity_points) + ")" for count, x in
-                 enumerate(top_results.top_activity, start=1)]))
+            embed.add_field(name="Leaderboard", value="\n".join(
+                [str(count) + ". " + x.name for count, x in enumerate(top_results.top_activity, start=1)]), inline=True)
+            embed.add_field(name=":speaking_head: activity",
+                            value="\n".join([str(x.activity_points) for x in top_results.top_activity]), inline=True)
+
         elif lbtype == "karma":
-            embed.add_field(name="Leaderboard :angel: karma", value="\n".join(
-                [str(count) + ". " + x.name + " (" + str(x.karma) + ")" for count, x in
-                 enumerate(top_results.top_karma, start=1)]))
+            embed.add_field(name="Leaderboard", value="\n".join(
+                [str(count) + ". " + x.name for count, x in enumerate(top_results.top_karma, start=1)]), inline=True)
+            embed.add_field(name=":angel: karma",
+                            value="\n".join([str(x.karma) for x in top_results.top_karma]), inline=True)
+
         elif lbtype == "tokens":
-            embed.add_field(name="Leaderboard :moneybag: tokens", value="\n".join(
-                [str(count) + ". " + x.name + " (" + str(x.tokens) + ")" for count, x in
-                 enumerate(top_results.top_tokens, start=1)]))
+            embed.add_field(name="Leaderboard", value="\n".join(
+                [str(count) + ". " + x.name for count, x in enumerate(top_results.top_tokens, start=1)]), inline=True)
+            embed.add_field(name=":moneybag: tokens",
+                            value="\n".join([str(x.tokens) for x in top_results.top_tokens]), inline=True)
         # No leaderboard type was given, ergo this was used
         else:
             embed.add_field(name="Leaderboard usage", value=".leaderboard messages\n"
@@ -157,3 +173,33 @@ class General(commands.Cog):
 
 def setup(client):
     client.add_cog(General(client))
+
+
+"""
+@client.command(aliases=['8ball'])
+async def _8ball(ctx, *, question):
+    responses = [   'It is certain',
+                    'It is decidedly so',
+                    'Without a doubt',
+                    'Yes – definitely',
+                    'You may rely on it',
+                    'As I see it, yes',
+                    'Most likely',
+                    'Outlook good',
+                    'Yes',
+                    'Signs point to yes',
+
+                    ',Reply hazy, try again',
+                    'Ask again later',
+                    'Better not tell you now',
+                    'Cannot predict now',
+                    'Concentrate and ask again',
+
+                    'Don\'t count on it',
+                    'My reply is no',
+                    'My sources say no',
+                    ',Outlook not so good',
+                    'Very doubtful']
+    await ctx.send(f'Q: {question}\n'
+                   f'A: {random.choice(responses)}')
+"""

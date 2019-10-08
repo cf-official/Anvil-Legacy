@@ -2,6 +2,7 @@
   <dictionary name="LunarLite">
     <words>
       <w>autorole</w>
+      <w>bcolors</w>
       <w>datetimes</w>
       <w>dbresults</w>
       <w>dbuser</w>
@@ -9,6 +10,7 @@
       <w>lboard</w>
       <w>lbtype</w>
       <w>leaderboard</w>
+      <w>numerics</w>
       <w>serverinfo</w>
       <w>sinfo</w>
       <w>uinfo</w>
