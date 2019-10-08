@@ -1,5 +1,6 @@
 from support.bcolors import Bcolors
 from database import dbfunctions
+from datetime import datetime
 import operator
 import time
 import re
@@ -97,14 +98,16 @@ async def set_user_auto_roles(user, guild):
 
 # Takes messages and prints them to both the console and the determined log channel in the guild (if it exists)
 async def logger(arg_guild, arg_colour, arg_content):
-    # Print to console
-    print(Bcolors.CYAN + f"[{arg_guild}] " + arg_colour + f"{arg_content}")
+    # Time logging
+    now = datetime.now()
+    now_string = now.strftime("%d/%m/%Y %H:%M:%S")
+    print(Bcolors.CYAN + f"[{now_string}] - [{arg_guild}]\n" + arg_colour + f"{arg_content}")
     # Fetch log-channel status, if returns true post to there
     if not isinstance(arg_guild, str):
         guild_data = dbfunctions.retrieve_guild(arg_guild)
         if guild_data.log_channel_id:
             try:
                 channel = arg_guild.get_channel(int(guild_data.log_channel_id))
-                await channel.send(f"```ini\n[{arg_guild}] {arg_content}\n```")
+                await channel.send(f"```ini\n[{now_string}] - [{arg_guild}]\n{arg_content}\n```")
             except Exception as e:
                 logger(arg_guild.name, Bcolors.RED, e)
