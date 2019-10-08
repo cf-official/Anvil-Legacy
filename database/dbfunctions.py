@@ -3,6 +3,7 @@ from database.guilds import Guild
 from database.users import User
 from database.roles import Role
 from database.karma import KarmaEvents
+from sqlalchemy import asc, desc
 from support import services
 from datetime import datetime
 from support import services
@@ -127,27 +128,27 @@ def update_user_karma(arg_guild, arg_user, arg_increment):
 
 
 # Store karma giving event with required datetime
-def set_karma_event(arg_user_giving, arg_user_receiving, arg_guild_id):
+def set_karma_event(arg_channel, arg_user_giving, arg_user_receiving, arg_guild_id):
     session = Session()
-
     # Retrieve required data
     guild = session.query(Guild).filter(Guild.guild_id == arg_guild_id).first()
     giving_user = next((x for x in guild.users if int(x.user_id) == int(arg_user_giving.id)), None)
     receiving_user = next((x for x in guild.users if int(x.user_id) == int(arg_user_receiving.id)), None)
 
     # Check if pre-existing matching karma event
-    event_check = session.query(KarmaEvents).filter((KarmaEvents.user_giving_id == giving_user.id) &
-                                                    (KarmaEvents.user_receiving_id == receiving_user.id)).first()
+    event_check = session.query(KarmaEvents).filter(
+        (KarmaEvents.user_giving_id == giving_user.id) & (KarmaEvents.user_receiving_id == receiving_user.id)).order_by(
+        desc(KarmaEvents.datetime)).first()
     if event_check:
         # The event already exists, check datetime
         if event_check.datetime != datetime.today().date():
-            event_check.datetime = datetime.today().date()
+            session.add(KarmaEvents(giving_user.id, receiving_user.id, arg_channel.id))
             check = True
         else:
             check = False
     else:
         # The event doesn't exist, make a new one!
-        session.add(KarmaEvents(giving_user.id, receiving_user.id, datetime.today().date()))
+        session.add(KarmaEvents(giving_user.id, receiving_user.id, arg_channel.id, ))
         check = True
     session.commit()
     session.close()

@@ -91,7 +91,7 @@ class Events(commands.Cog):
 
             if dbfunctions.check_reaction(str(emoji_id), guild_id):
                 # Give karma to user if karma event returns true (karma gain available from this person!)
-                if dbfunctions.set_karma_event(user, reaction.message.author, guild_id):
+                if dbfunctions.set_karma_event(reaction.message.channel, user, reaction.message.author, guild_id):
                     services.logger(user.guild, Bcolors.YELLOW + f"{user} gave {reaction.message.author} karma.")
                     dbfunctions.update_user_karma(user.guild, reaction.message.author, 1)
 
