@@ -30,6 +30,7 @@ class Guild(Base):
     prefix = Column(String)
     attached = Column(Integer)
     karma_emoji = Column(String)
+    log_channel_id = Column(String)
 
     users = relationship("User", secondary='guilds_users', cascade="save-update")
     roles = relationship("Role", secondary='guilds_roles', cascade="save-update")
@@ -41,3 +42,4 @@ class Guild(Base):
         self.prefix = '.'
         self.attached = True
         self.karma_emoji = None
+        self.log_channel_id = None

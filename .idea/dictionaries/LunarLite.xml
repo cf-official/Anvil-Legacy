@@ -4,9 +4,11 @@
       <w>autorole</w>
       <w>bcolors</w>
       <w>datetimes</w>
+      <w>dbguild</w>
       <w>dbresults</w>
       <w>dbuser</w>
       <w>emoji</w>
+      <w>inaccesible</w>
       <w>lboard</w>
       <w>lbtype</w>
       <w>leaderboard</w>

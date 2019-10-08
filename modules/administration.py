@@ -15,7 +15,7 @@ class Administration(commands.Cog):
     @commands.has_permissions(administrator=True)
     async def set_prefix(self, ctx, *, new_prefix):
         dbfunctions.set_guild_prefix(ctx.guild, new_prefix)
-        services.logger(ctx.guild, Bcolors.MAGENTA + f"{ctx.author} changed the prefix to {new_prefix}")
+        await services.logger(ctx.guild, Bcolors.MAGENTA, f"{ctx.author} changed the prefix to {new_prefix}")
 
     # Set karma reaction emoji
     @commands.command()
@@ -35,24 +35,32 @@ class Administration(commands.Cog):
             if emoji in UNICODE_EMOJI:
                 emoji_id = emoji
         except Exception as e:
-            services.logger(ctx.guild, Bcolors.RED + f"{e}\nIn administration.py : set_karma_reaction")
+            await services.logger(ctx.guild, Bcolors.RED, f"{e}\nIn administration.py : set_karma_reaction")
         if emoji_id == "":
-            services.logger(ctx.guild, Bcolors.RED + f"{ctx.guild} tried to set inaccesible emoji for karma reaction")
+            await services.logger(ctx.guild, Bcolors.RED,
+                                  f"{ctx.guild} tried to set inaccesible emoji for karma reaction")
         else:
             dbfunctions.set_guild_karma_emoji(ctx.guild, emoji_id)
-            services.logger(ctx.guild, Bcolors.MAGENTA + f"{ctx.author} set the karma emoji to {emoji_id}")
+            await services.logger(ctx.guild, Bcolors.MAGENTA, f"{ctx.author} set the karma emoji to {emoji_id}")
+
+    # Set log_channel_id
+    @commands.command()
+    @commands.has_permissions(administrator=True)
+    async def set_log_channel_id(self, ctx, channel: discord.TextChannel):
+        await services.logger(ctx.guild, Bcolors.MAGENTA, f"{ctx.author} set logging channel to {channel}")
+        dbfunctions.set_guild_log_channel(ctx.guild, channel.id)
 
     @commands.command()
     @commands.has_permissions(administrator=True)
     async def add_role(self, ctx, role: discord.Role, point_req=0, karma_req=0):
-        services.logger(ctx.guild, Bcolors.MAGENTA +
-                        f"{ctx.author} added {role} with point req {point_req} and karma req {karma_req}")
+        await services.logger(ctx.guild, Bcolors.MAGENTA,
+                              f"{ctx.author} added {role} with point req {point_req} and karma req {karma_req}")
         dbfunctions.add_role(ctx.guild.id, role, point_req, karma_req)
 
     @commands.command()
     @commands.has_permissions(administrator=True)
-    async def remove_role(self,ctx, role: discord.Role):
-        services.logger(ctx.guild, Bcolors.MAGENTA + f"{ctx.author} removed {role}")
+    async def remove_role(self, ctx, role: discord.Role):
+        await services.logger(ctx.guild, Bcolors.MAGENTA,  f"{ctx.author} removed {role}")
         dbfunctions.remove_role(ctx.guild.id, role)
 
         # Check for any guild members who still have this auto-role and remove it

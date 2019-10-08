@@ -16,7 +16,7 @@ class Moderation(commands.Cog):
         if member.guild_premissions.kick_members and not ctx.user.guild_permissions.administrator \
                 and not member.guild_premissions.administrator:
             await ctx.send("Can't kick member with equal permission level!")
-        services.logger(ctx.guild, Bcolors.MAGENTA + f"{ctx.author} kicked {member}\nReason: {reason}")
+        services.logger(ctx.guild, Bcolors.MAGENTA, f"{ctx.author} kicked {member}\nReason: {reason}")
         await member.kick(reason=reason)
 
     # Ban a user
@@ -26,7 +26,7 @@ class Moderation(commands.Cog):
         if member.guild_premissions.ban_members and not ctx.user.guild_permissions.administrator \
                 and not member.guild_premissions.administrator:
             await ctx.send("Can't kick member with equal permission level!")
-        services.logger(ctx.guild, Bcolors.MAGENTA + f"{ctx.author} banned {member}\nReason: {reason}")
+        services.logger(ctx.guild, Bcolors.MAGENTA, f"{ctx.author} banned {member}\nReason: {reason}")
         await member.ban(reason=reason)
 
     # Un-ban a user
@@ -40,7 +40,7 @@ class Moderation(commands.Cog):
             user = ban_entry.user
 
             if (user.name, user.discriminator) == (member_name, member_discriminator):
-                services.logger(ctx.guild, Bcolors.MAGENTA + f"{ctx.author} unbanned {member}")
+                services.logger(ctx.guild, Bcolors.MAGENTA, f"{ctx.author} unbanned {member}")
                 await ctx.guild.unban(user)
                 return
 

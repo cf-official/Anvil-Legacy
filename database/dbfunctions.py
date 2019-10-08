@@ -38,6 +38,19 @@ def guild_remove(arg_guild):
     session.close()
 
 
+# Fetch user from db and return all data that belongs to user
+def retrieve_guild(arg_guild):
+    session = Session()
+    guild = session.query(Guild).filter(Guild.guild_id == arg_guild.id).first()
+    dbguild = services.AttrDict()
+    dbguild.update({"name": guild.name, "id": guild.guild_id, "join_date": guild.join_date, "prefix": guild.prefix,
+                    "attached": guild.attached, "karma_emoji": guild.karma_emoji,
+                    "log_channel_id": guild.log_channel_id})
+    session.commit()
+    session.close()
+    return dbguild
+
+
 # Fetch the current possibly custom guild prefix
 def get_guild_prefix(arg_guild):
     session = Session()
@@ -62,6 +75,15 @@ def set_guild_karma_emoji(arg_guild, arg_emoji_id):
     session = Session()
     guild = session.query(Guild).filter(Guild.guild_id == arg_guild.id).first()
     guild.karma_emoji = arg_emoji_id
+    session.commit()
+    session.close()
+
+
+# Set chosen channel ID for logging channel
+def set_guild_log_channel(arg_guild, arg_channel_id):
+    session = Session()
+    guild = session.query(Guild).filter(Guild.guild_id == arg_guild.id).first()
+    guild.log_channel_id = arg_channel_id
     session.commit()
     session.close()
 
