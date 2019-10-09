@@ -76,24 +76,30 @@ class Events(commands.Cog):
                 dbfunctions.update_user_activity(user.guild, user, 1)
 
     @commands.Cog.listener()
-    async def on_reaction_add(self, reaction, user):
+    async def on_raw_reaction_add(self, payload):
+        guild = self.client.get_guild(payload.guild_id)
+        channel = guild.get_channel(payload.channel_id)
+        message = await channel.fetch_message(payload.message_id)
+        reaction = payload.emoji
+        user = guild.get_member(payload.user_id)
         # No giving karma to yourself or to bots
-        if reaction.message.author is not user and reaction.message.author.bot is False and user.bot is False:
-            guild_id = user.guild.id
-            emoji_id = reaction.emoji
+        if message.author is not user and message.author.bot is False and user.bot is False:
+            guild_id = guild.id
+            emoji_id = reaction
+            print(type(emoji_id))
             try:
-                emoji_id = emoji_id.id
+                if emoji_id.id:
+                    emoji_id = emoji_id.id
             except AttributeError:
                 pass
             except Exception as e:
-                await services.console_log(user.guild, Bcolors.RED, f"{e}\nIn events.py : on_reaction_add")
-                print(Bcolors.FAIL + f"[Error] {e} \nIn events.py : on_reaction_add")
+                await services.console_log(guild, Bcolors.RED, f"{e}\nIn events.py : on_reaction_add")
 
             if dbfunctions.check_reaction(str(emoji_id), guild_id):
                 # Give karma to user if karma event returns true (karma gain available from this person!)
-                if dbfunctions.set_karma_event(reaction.message.channel, user, reaction.message.author, guild_id):
-                    await services.console_log(user.guild, Bcolors.YELLOW, f"{user} gave {reaction.message.author} karma.")
-                    dbfunctions.update_user_karma(user.guild, reaction.message.author, 1)
+                if dbfunctions.set_karma_event(channel, user, message.author, guild_id):
+                    await services.console_log(guild, Bcolors.YELLOW, f"{user} gave {message.author} karma.")
+                    dbfunctions.update_user_karma(guild, message.author, 1)
 
 
 def setup(client):

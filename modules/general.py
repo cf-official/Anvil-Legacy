@@ -58,7 +58,7 @@ class General(commands.Cog):
         roles = [role for role in ctx.guild.roles]
         roles.reverse()
         # Remove last role (@@everyone)
-        roles = [roles[0], roles[-1]]
+        roles = roles[:-1]
 
         boosters = [booster for booster in ctx.guild.premium_subscribers]
         boosters.reverse()
@@ -97,6 +97,7 @@ class General(commands.Cog):
     async def on_message_delete(self, message):
         self.sniped_message = message
 
+    '''
     @commands.command()
     async def snipe(self, ctx):
         if self.sniped_message is None:
@@ -107,6 +108,7 @@ class General(commands.Cog):
             embed.set_footer(text=cfg.embed_footer, icon_url=self.client.user.avatar_url)
             embed.add_field(name=f"{self.sniped_message.author} said:", value=self.sniped_message.content)
             await ctx.send(embed=embed)
+    '''
 
     @commands.command()
     async def roles(self, ctx):
