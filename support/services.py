@@ -103,10 +103,9 @@ async def console_log(arg_guild, arg_colour, arg_content):
     now_string = now.strftime("%d/%m/%Y %H:%M:%S")
     print(Bcolors.CYAN + f"[{arg_guild}] - [{now_string}]\n" + arg_colour + f"{arg_content}")
     # Fetch log-channel status, if returns true post to there
-    '''
     if not isinstance(arg_guild, str):
         await guild_log(arg_guild, arg_content)
-    '''
+
 
 # Takes messages and prints them to the determined log channel in the guild (if it exists)
 async def guild_log(arg_guild, arg_content):

@@ -36,7 +36,7 @@ class Events(commands.Cog):
     @commands.Cog.listener()
     async def on_guild_remove(self, guild):
         await services.console_log("BOT_CLIENT", Bcolors.YELLOW, "====================================")
-        await services.console_log(guild, Bcolors.YELLOW, "Disconnected.")
+        await services.console_log(str(guild), Bcolors.YELLOW, "Disconnected.")
         await services.console_log("BOT_CLIENT", Bcolors.YELLOW, "====================================")
         dbfunctions.guild_remove(guild)
 
