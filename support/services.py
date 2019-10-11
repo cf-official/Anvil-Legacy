@@ -1,6 +1,7 @@
 from support.bcolors import Bcolors
 from database import dbfunctions
 from datetime import datetime
+from discord.ext import commands
 import operator
 import time
 import re
@@ -88,12 +89,20 @@ async def set_user_auto_roles(user, guild):
             allowed_roles.remove(role)
 
     # Actually add/remove roles here
+    # Add roles first. Might break if missing required perms!
     if bool(allowed_roles):
-        await user.add_roles(*allowed_roles, reason="Automatic role update")
-        console_log(user.guild, Bcolors.YELLOW, f"added auto roles to {user}")
+        try:
+            await user.add_roles(*allowed_roles, reason="Automatic role update")
+            await console_log(user.guild, Bcolors.YELLOW, f"added auto roles to {user}")
+        except Exception as e:
+            await console_log(user.guild, Bcolors.RED, f"couldn't add an auto role to {user} due to: {e}.")
+    # Removed roles. Might break if missing required perms!
     if bool(not_allowed_roles):
-        await user.remove_roles(*not_allowed_roles, reason="Automatic role update")
-        console_log(user.guild, Bcolors.YELLOW, f"removed auto from roles {user}")
+        try:
+            await user.remove_roles(*not_allowed_roles, reason="Automatic role update")
+            await console_log(user.guild, Bcolors.YELLOW, f"removed auto from roles {user}")
+        except Exception as e:
+            await console_log(user.guild, Bcolors.RED, f"couldn't remove an auto role from {user} due to: {e}.")
 
 
 # Takes messages and prints them to both the console
@@ -102,6 +111,7 @@ async def console_log(arg_guild, arg_colour, arg_content):
     now = datetime.now()
     now_string = now.strftime("%d/%m/%Y %H:%M:%S")
     print(Bcolors.CYAN + f"[{arg_guild}] - [{now_string}]\n" + arg_colour + f"{arg_content}")
+
     # Fetch log-channel status, if returns true post to there
     if not isinstance(arg_guild, str):
         await guild_log(arg_guild, arg_content)
@@ -119,4 +129,4 @@ async def guild_log(arg_guild, arg_content):
             channel = arg_guild.get_channel(int(guild_data.log_channel_id))
             await channel.send(f"```ini\n[{now_string}]\n{arg_content}\n```")
         except Exception as e:
-            console_log(arg_guild.name, Bcolors.RED, e)
+            await console_log(arg_guild.name, Bcolors.RED, e)

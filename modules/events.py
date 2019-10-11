@@ -1,8 +1,9 @@
 import discord
-from discord.ext import tasks, commands
+from discord.ext import commands
 from support.bcolors import Bcolors
 from support import services
 from database import dbfunctions
+from support import config as cfg
 
 
 class Events(commands.Cog):
@@ -16,7 +17,7 @@ class Events(commands.Cog):
         await services.console_log("BOT_CLIENT", Bcolors.GREEN, f"Bot ID: {self.client.user.id}")
         await services.console_log("BOT_CLIENT", Bcolors.YELLOW, "====================================")
         for guild in self.client.guilds:
-            await services.console_log(guild, Bcolors.YELLOW, "Connected.")
+            await services.console_log(str(guild), Bcolors.YELLOW, "Connected.")
             # Add guild to db, add all users of said guild to db afterwards (relational)
             dbfunctions.guild_add(guild)
             dbfunctions.guild_add_users(guild)
@@ -27,7 +28,7 @@ class Events(commands.Cog):
     @commands.Cog.listener()
     async def on_guild_join(self, guild):
         await services.console_log("BOT_CLIENT", Bcolors.YELLOW, "====================================")
-        await services.console_log(guild, Bcolors.YELLOW, "Connected.")
+        await services.console_log(str(guild), Bcolors.YELLOW, "Connected.")
         await services.console_log("BOT_CLIENT", Bcolors.YELLOW, "====================================")
         # Add guild to db, add all users of said guild to db afterwards (relational)
         dbfunctions.guild_add(guild)
@@ -47,8 +48,19 @@ class Events(commands.Cog):
             await ctx.send('You are missing a required argument.')
         elif isinstance(error, commands.ArgumentParsingError):
             await ctx.send('You are using a faulty argument.')
+        elif isinstance(error, commands.CommandNotFound):
+            return
+        elif isinstance(error, discord.HTTPException):
+            print("a")
+            print(error.original)
+            await services.console_log(ctx.guild, Bcolors.RED, f"the bot is not allowed to do this; \n{error}")
+        # Rest of errors/issues
         else:
+            print(error.original)
+            print("b")
             await services.console_log(ctx.guild, Bcolors.RED, f"'{ctx.message.content}' resulted in;\n{error}")
+        # Add error emoji
+        await ctx.message.add_reaction(cfg.feedback_error_emoji_id)
 
     # Member interaction
     @commands.Cog.listener()
@@ -86,7 +98,6 @@ class Events(commands.Cog):
         if message.author is not user and message.author.bot is False and user.bot is False:
             guild_id = guild.id
             emoji_id = reaction
-            print(type(emoji_id))
             try:
                 if emoji_id.id:
                     emoji_id = emoji_id.id

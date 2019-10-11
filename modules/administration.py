@@ -64,12 +64,18 @@ class Administration(commands.Cog):
     @commands.has_permissions(administrator=True)
     async def remove_role(self, ctx, role: discord.Role):
         await services.console_log(ctx.guild, Bcolors.MAGENTA, f"{ctx.author} removed {role}")
-        dbfunctions.remove_role(ctx.guild.id, role)
-
-        # Check for any guild members who still have this auto-role and remove it
-        for member in ctx.guild.members:
-            if role in member.roles:
-                await member.remove_roles(role, reason="Automatic role update")
+        # Remove role from DB and return if role existed in the DB in the first place;
+        if dbfunctions.remove_role(ctx.guild.id, role):
+            # Check for any guild members who still have this auto-role and remove it
+            try:
+                for member in ctx.guild.members:
+                    if role in member.roles:
+                        await member.remove_roles(role, reason="Automatic role update")
+                        await services.console_log(ctx.guild, Bcolors.YELLOW, f"removed auto from roles {member}")
+            # But if the bot cannot remove said roles...
+            except Exception as e:
+                await services.console_log(ctx.guild, Bcolors.RED,
+                                           f"bot tried to remove the '{role}' role from guild members but lacked permissions to do so.")
 
 
 def setup(client):

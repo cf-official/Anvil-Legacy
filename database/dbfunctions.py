@@ -252,8 +252,12 @@ def remove_role(arg_guild_id, arg_role):
     if role_to_remove is not None:
         guild.roles.remove(role_to_remove)
         session.delete(role_to_remove)
+    else:
+        session.close()
+        return False
     session.commit()
     session.close()
+    return True
 
 
 # Retrieve all top 10 users per stat from guild
