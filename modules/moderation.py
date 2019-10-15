@@ -12,35 +12,33 @@ class Moderation(commands.Cog):
     # Kick a user
     @commands.command()
     @commands.has_permissions(kick_members=True)
-    async def kick(self, ctx, member: discord.Member, *, reason=None):
-        if member.guild_premissions.kick_members and not ctx.user.guild_permissions.administrator \
-                and not member.guild_premissions.administrator:
-            await ctx.send("Can't kick member with equal permission level!")
-        services.console_log(ctx.guild, Bcolors.MAGENTA, f"{ctx.author} kicked {member}\nReason: {reason}")
-        await member.kick(reason=reason)
+    async def kick(self, ctx, user: discord.Member, *, reason=None):
+        if services.authority_check(user, ctx.author):
+            await services.console_log(ctx.guild, Bcolors.MAGENTA, f"{ctx.author} kicked {user}\nReason: {reason}")
+            await user.kick(reason=reason)
+        else:
+            await ctx.channel.send("Lacking authority to do this")
 
     # Ban a user
     @commands.command()
     @commands.has_permissions(ban_members=True)
-    async def ban(self, ctx, member: discord.Member, *, reason=None):
-        if member.guild_premissions.ban_members and not ctx.user.guild_permissions.administrator \
-                and not member.guild_premissions.administrator:
-            await ctx.send("Can't kick member with equal permission level!")
-        services.console_log(ctx.guild, Bcolors.MAGENTA, f"{ctx.author} banned {member}\nReason: {reason}")
-        await member.ban(reason=reason)
+    async def ban(self, ctx, user: discord.Member, *, reason=None):
+        if services.authority_check(user, ctx.author):
+            await services.console_log(ctx.guild, Bcolors.MAGENTA, f"{ctx.author} banned {user}\nReason: {reason}")
+            await user.ban(reason=reason)
+        else:
+            await ctx.channel.send("Lacking authority to do this")
 
     # Un-ban a user
     @commands.command()
     @commands.has_permissions(ban_members=True)
-    async def unban(self, ctx, *, member):
+    async def unban(self, ctx, *, user):
         banned_users = await ctx.guild.bans()
-        member_name, member_discriminator = member.split('#')
-
+        member_name, member_discriminator = user.split('#')
         for ban_entry in banned_users:
             user = ban_entry.user
-
             if (user.name, user.discriminator) == (member_name, member_discriminator):
-                services.console_log(ctx.guild, Bcolors.MAGENTA, f"{ctx.author} unbanned {member}")
+                await services.console_log(ctx.guild, Bcolors.MAGENTA, f"{ctx.author} unbanned {user}")
                 await ctx.guild.unban(user)
                 return
 
@@ -53,17 +51,26 @@ class Moderation(commands.Cog):
     @commands.command()
     @commands.has_permissions(kick_members=True)
     async def modify_activity(self, ctx, user: discord.User, amount : int):
-        dbfunctions.update_user_activity(ctx.guild, user, amount)
+        if services.authority_check(user, ctx.author):
+            dbfunctions.update_user_activity(ctx.guild, user, amount)
+        else:
+            await ctx.channel.send("Lacking authority to do this")
 
     @commands.command()
     @commands.has_permissions(kick_members=True)
     async def modify_message(self, ctx, user: discord.User, amount : int):
-        dbfunctions.update_user_messages(ctx.guild, user, amount)
+        if services.authority_check(user, ctx.author):
+            dbfunctions.update_user_messages(ctx.guild, user, amount)
+        else:
+            await ctx.channel.send("Lacking authority to do this")
 
     @commands.command()
     @commands.has_permissions(kick_members=True)
     async def modify_karma(self, ctx, user: discord.User, amount : int):
-        dbfunctions.update_user_karma(ctx.guild, user, amount)
+        if services.authority_check(user, ctx.author):
+            dbfunctions.update_user_karma(ctx.guild, user, amount)
+        else:
+            await ctx.channel.send("Lacking authority to do this")
 
 
 def setup(client):

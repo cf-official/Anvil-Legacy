@@ -1,6 +1,7 @@
 from support.bcolors import Bcolors
 from database import dbfunctions
 from datetime import datetime
+from support import config as cfg
 from discord.ext import commands
 import operator
 import time
@@ -106,22 +107,25 @@ async def set_user_auto_roles(user, guild):
 
 
 # Takes messages and prints them to both the console
-async def console_log(arg_guild, arg_colour, arg_content):
+async def console_log(arg_guild, arg_colour, arg_content, arg_error=False):
     # Time logging
     now = datetime.now()
     now_string = now.strftime("%d/%m/%Y %H:%M:%S")
-    print(Bcolors.CYAN + f"[{arg_guild}] - [{now_string}]\n" + arg_colour + f"{arg_content}")
+    print(Bcolors.CYAN + f"[{now_string}] - [{arg_guild}] " + arg_colour + f"{arg_content}")
 
     # Fetch log-channel status, if returns true post to there
     if not isinstance(arg_guild, str):
-        await guild_log(arg_guild, arg_content)
+        await guild_log(arg_guild, arg_content, arg_error)
 
 
 # Takes messages and prints them to the determined log channel in the guild (if it exists)
-async def guild_log(arg_guild, arg_content):
+async def guild_log(arg_guild, arg_content, arg_error):
     # Time logging
     now = datetime.now()
     now_string = now.strftime("%d/%m/%Y %H:%M:%S")
+    # Error logging
+    if arg_error:
+        arg_content += f"\n\nIn this error persists, please notify {cfg.owner}"
     # Fetch log-channel status, if returns true post to there
     guild_data = dbfunctions.retrieve_guild(arg_guild)
     if guild_data.log_channel_id:
@@ -130,3 +134,11 @@ async def guild_log(arg_guild, arg_content):
             await channel.send(f"```ini\n[{now_string}]\n{arg_content}\n```")
         except Exception as e:
             await console_log(arg_guild.name, Bcolors.RED, e)
+
+
+# Check if user has higher authority level
+def authority_check(arg_target_user, arg_user):
+    if arg_user.top_role > arg_target_user.top_role:
+        return True
+    else:
+        return False

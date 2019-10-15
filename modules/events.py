@@ -4,6 +4,7 @@ from support.bcolors import Bcolors
 from support import services
 from database import dbfunctions
 from support import config as cfg
+from codeforge import cfevents
 
 
 class Events(commands.Cog):
@@ -50,15 +51,10 @@ class Events(commands.Cog):
             await ctx.send('You are using a faulty argument.')
         elif isinstance(error, commands.CommandNotFound):
             return
-        elif isinstance(error, discord.HTTPException):
-            print("a")
-            print(error.original)
-            await services.console_log(ctx.guild, Bcolors.RED, f"the bot is not allowed to do this; \n{error}")
         # Rest of errors/issues
         else:
-            print(error.original)
-            print("b")
-            await services.console_log(ctx.guild, Bcolors.RED, f"'{ctx.message.content}' resulted in;\n{error}")
+            await services.console_log(ctx.guild, Bcolors.RED, f"'{ctx.message.content}' resulted in;\n{error}",
+                                       arg_error=True)
         # Add error emoji
         await ctx.message.add_reaction(cfg.feedback_error_emoji_id)
 
@@ -69,6 +65,7 @@ class Events(commands.Cog):
         if not member.bot:
             dbfunctions.add_user(member.guild, member)
             await services.set_user_auto_roles(member, member.guild)
+        await cfevents.cf_on_member_join(member)
 
     @commands.Cog.listener()
     async def on_member_remove(self, member):
