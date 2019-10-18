@@ -5,6 +5,8 @@ from support import services
 from database import dbfunctions
 from support import config as cfg
 from codeforge import cfevents
+from support import log
+logger = log.Logger
 
 
 class Events(commands.Cog):
@@ -14,15 +16,15 @@ class Events(commands.Cog):
     # Ready notifications
     @commands.Cog.listener()
     async def on_ready(self):
-        await services.console_log("BOT_CLIENT", Bcolors.GREEN, f"Logged in as: {self.client.user.name}")
-        await services.console_log("BOT_CLIENT", Bcolors.GREEN, f"Bot ID: {self.client.user.id}")
-        await services.console_log("BOT_CLIENT", Bcolors.YELLOW, "====================================")
+        logger.log(logger.INFO, f"Logged in as: {self.client.user.name}")
+        logger.log(logger.INFO, f"Bot ID: {self.client.user.id}")
+        logger.log(logger.INFO, "====================================")
         for guild in self.client.guilds:
-            await services.console_log(str(guild), Bcolors.YELLOW, "Connected.")
+            logger.log(logger.INFO, f"Connected to {guild}")
             # Add guild to db, add all users of said guild to db afterwards (relational)
             dbfunctions.guild_add(guild)
             dbfunctions.guild_add_users(guild)
-        await services.console_log("BOT_CLIENT", Bcolors.YELLOW, "====================================")
+        logger.log(logger.INFO, "====================================")
         await self.client.change_presence(status=discord.Status.idle, activity=discord.Game('大家好！'))
 
     # Guild interactions
@@ -96,7 +98,8 @@ class Events(commands.Cog):
             message = await channel.fetch_message(payload.message_id)
         except Exception as e:
             # Couldn't fetch the message, probably because it was removed by another bot (looking at you sigma)
-            await services.console_log(guild, Bcolors.RED, f"{e}\nIn events.py : on_reaction_add")
+            await services.console_log(str(guild), Bcolors.RED, f"{e}\nIn events.py : on_reaction_add")
+            return
 
         reaction = payload.emoji
 
