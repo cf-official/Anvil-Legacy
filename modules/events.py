@@ -30,18 +30,18 @@ class Events(commands.Cog):
     # Guild interactions
     @commands.Cog.listener()
     async def on_guild_join(self, guild):
-        await services.console_log("BOT_CLIENT", Bcolors.YELLOW, "====================================")
-        await services.console_log(str(guild), Bcolors.YELLOW, "Connected.")
-        await services.console_log("BOT_CLIENT", Bcolors.YELLOW, "====================================")
+        logger.log(logger.INFO, "====================================")
+        logger.log(logger.INFO, f"Connected to {guild}")
+        logger.log(logger.INFO, "====================================")
         # Add guild to db, add all users of said guild to db afterwards (relational)
         dbfunctions.guild_add(guild)
         dbfunctions.guild_add_users(guild)
 
     @commands.Cog.listener()
     async def on_guild_remove(self, guild):
-        await services.console_log("BOT_CLIENT", Bcolors.YELLOW, "====================================")
-        await services.console_log(str(guild), Bcolors.YELLOW, "Disconnected.")
-        await services.console_log("BOT_CLIENT", Bcolors.YELLOW, "====================================")
+        logger.log(logger.INFO, "====================================")
+        logger.log(logger.INFO, f"Disconnected from {guild}")
+        logger.log(logger.INFO, "====================================")
         dbfunctions.guild_remove(guild)
 
     # Error listener
@@ -55,8 +55,7 @@ class Events(commands.Cog):
             return
         # Rest of errors/issues
         else:
-            await services.console_log(ctx.guild, Bcolors.RED, f"'{ctx.message.content}' resulted in;\n{error}",
-                                       arg_error=True)
+            logger.log(logger.ERROR, f"{ctx.message.content} resulted in;\n{error}")
         # Add error emoji
         await ctx.message.add_reaction(cfg.feedback_error_emoji_id)
 

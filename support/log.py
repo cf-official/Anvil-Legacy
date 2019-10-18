@@ -11,9 +11,9 @@ class Logger(Enum):
     INFO = "\x1b[48;2;0;0;255mINFO\x1b[0m     "
     # FG black, BG green
     OK = "\x1b[48;2;0;255;0m\x1b[38;2;0;0;0mOK\x1b[0m       "
-    #
+    # FG ?, BG ?
     VERBOSE = "\x1b[48;2;128;128;128mVERBOSE\x1b[0m  "
-    #
+    # FG ?, BG ?
     DEBUG = "\x1b[48;2;240;230;140m\x1b[38;2;0;0;0mDEBUG\x1b[0m    "
     # FG white, BG red
     ERROR = "\x1b[48;2;255;0;0mERROR\x1b[0m    "
