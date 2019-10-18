@@ -111,7 +111,7 @@ async def console_log(arg_guild, arg_colour, arg_content, arg_error=False):
     # Time logging
     now = datetime.now()
     now_string = now.strftime("%d/%m/%Y %H:%M:%S")
-    print(Bcolors.CYAN + f"[{now_string}] - [{arg_guild}] " + arg_colour + f"{arg_content}")
+    print(Bcolors.CYAN + f"[{now_string}] - [{arg_guild}] " + arg_colour + f"{arg_content}" + Bcolors.RESET)
 
     # Fetch log-channel status, if returns true post to there
     if not isinstance(arg_guild, str):
