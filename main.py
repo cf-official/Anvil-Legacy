@@ -3,11 +3,11 @@ from discord.ext import commands
 import time
 from support import config as cfg
 from support import services
-from support import bcolors
 from database.dbbase import initialize_sql
 from database import dbfunctions
 import sqlalchemy
-
+from support import log
+logger = log.Logger
 
 # Initiate and/or prepare db & db tables
 SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://' + cfg.mysql['user'] + ':' + cfg.mysql['password'] + '@' + cfg.mysql['host'] + '/' + cfg.mysql['database']
@@ -53,7 +53,7 @@ while True:
         client.loop.run_until_complete(client.run(cfg.token))
         sleep_timer = 5
     except BaseException:
-        services.console_log("BOT_CLIENT", bcolors.Bcolors.RED, f'Waiting {sleep_timer} seconds before next reconnection attempt...')
+        logger.log(logger.ERROR, f'Waiting {sleep_timer} seconds before next reconnection attempt...')
         sleep_timer += 5
         time.sleep(sleep_timer)
 

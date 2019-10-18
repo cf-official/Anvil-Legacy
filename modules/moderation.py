@@ -1,8 +1,9 @@
 import discord
 from database import dbfunctions
 from discord.ext import commands
-from support.bcolors import Bcolors
 from support import services
+from support import log
+logger = log.Logger
 
 
 class Moderation(commands.Cog):
@@ -14,7 +15,7 @@ class Moderation(commands.Cog):
     @commands.has_permissions(kick_members=True)
     async def kick(self, ctx, user: discord.Member, *, reason=None):
         if services.authority_check(user, ctx.author):
-            await services.console_log(ctx.guild, Bcolors.MAGENTA, f"{ctx.author} kicked {user}\nReason: {reason}")
+            logger.log(logger.VERBOSE, f"{ctx.author} kicked {user}.")
             await user.kick(reason=reason)
         else:
             await ctx.channel.send("Lacking authority to do this")
@@ -24,7 +25,7 @@ class Moderation(commands.Cog):
     @commands.has_permissions(ban_members=True)
     async def ban(self, ctx, user: discord.Member, *, reason=None):
         if services.authority_check(user, ctx.author):
-            await services.console_log(ctx.guild, Bcolors.MAGENTA, f"{ctx.author} banned {user}\nReason: {reason}")
+            logger.log(logger.VERBOSE, f"{ctx.author} banned {user}.")
             await user.ban(reason=reason)
         else:
             await ctx.channel.send("Lacking authority to do this")
@@ -38,7 +39,7 @@ class Moderation(commands.Cog):
         for ban_entry in banned_users:
             user = ban_entry.user
             if (user.name, user.discriminator) == (member_name, member_discriminator):
-                await services.console_log(ctx.guild, Bcolors.MAGENTA, f"{ctx.author} unbanned {user}")
+                logger.log(logger.VERBOSE, f"{ctx.author} unbanned {user}")
                 await ctx.guild.unban(user)
                 return
 

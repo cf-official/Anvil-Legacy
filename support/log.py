@@ -5,18 +5,26 @@
 from enum import Enum
 from time import gmtime, strftime
 
+# Temporary import
+from colorama import Fore
+
 
 class Logger(Enum):
     # FG white, BG Blue
-    INFO = "\x1b[48;2;0;0;255mINFO\x1b[0m     "
+    #INFO = "\x1b[48;2;0;0;255mINFO\x1b[0m     "
+    INFO = Fore.YELLOW
     # FG black, BG green
-    OK = "\x1b[48;2;0;255;0m\x1b[38;2;0;0;0mOK\x1b[0m       "
+    #OK = "\x1b[48;2;0;255;0m\x1b[38;2;0;0;0mOK\x1b[0m       "
+    OK = Fore.GREEN
     # FG ?, BG ?
-    VERBOSE = "\x1b[48;2;128;128;128mVERBOSE\x1b[0m  "
+    #VERBOSE = "\x1b[48;2;128;128;128mVERBOSE\x1b[0m  "
+    VERBOSE = Fore.LIGHTBLUE_EX
     # FG ?, BG ?
-    DEBUG = "\x1b[48;2;240;230;140m\x1b[38;2;0;0;0mDEBUG\x1b[0m    "
+    #DEBUG = "\x1b[48;2;240;230;140m\x1b[38;2;0;0;0mDEBUG\x1b[0m    "
+    DEBUG = Fore.WHITE
     # FG white, BG red
-    ERROR = "\x1b[48;2;255;0;0mERROR\x1b[0m    "
+    #ERROR = "\x1b[48;2;255;0;0mERROR\x1b[0m    "
+    ERROR = Fore.RED
 
     # Log output to console, handle variations if custom=True
     @staticmethod

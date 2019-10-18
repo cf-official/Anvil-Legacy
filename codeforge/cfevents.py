@@ -27,17 +27,19 @@ async def cf_on_member_join(member):
         bot_role = [role for role in CF.roles if role.name == "bot"]
         await member.add_roles(bot_role)
 
+
 # Message handler specifically for integrating with CodeForge only features
 # such as the present yourself lockdown feature.
 async def cf_on_message_create(message):
-    #check if channel matches the stored id for #present-yourself
+    # Check if channel matches the stored id for #present-yourself
     print(message.channel.id, cfc.presentation['channel'], message.channel.id == cfc.presentation['channel'])
-    if message.channel.id == cfc.presentation['channel']: #285749430689464320:
+    if message.channel.id == cfc.presentation['channel']: # 285749430689464320:
         print("valid")
         server = message.guild
         member = server.get_member(message.author.id)
         bot_role = [role for role in server.roles if role.name == cfc.presentation['role_name']]
         await member.add_roles(bot_role[0])
+
 
 class CFEvents(commands.Cog):
     def __init__(self, client):

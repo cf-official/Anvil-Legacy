@@ -1,11 +1,13 @@
-from support.bcolors import Bcolors
+
 from database import dbfunctions
 from datetime import datetime
 from support import config as cfg
-from discord.ext import commands
 import operator
 import time
 import re
+from support import log
+logger = log.Logger
+from discord.ext import commands
 
 
 # Search for a specific user and return it
@@ -94,28 +96,16 @@ async def set_user_auto_roles(user, guild):
     if bool(allowed_roles):
         try:
             await user.add_roles(*allowed_roles, reason="Automatic role update")
-            await console_log(user.guild, Bcolors.YELLOW, f"added auto roles to {user}")
+            logger.log(logger.INFO, f"added auto roles to {user}")
         except Exception as e:
-            await console_log(user.guild, Bcolors.RED, f"couldn't add an auto role to {user} due to: {e}.")
+            logger.log(logger.ERROR, f"couldn't add an auto role to {user} due to: {e}.")
     # Removed roles. Might break if missing required perms!
     if bool(not_allowed_roles):
         try:
             await user.remove_roles(*not_allowed_roles, reason="Automatic role update")
-            await console_log(user.guild, Bcolors.YELLOW, f"removed auto from roles {user}")
+            logger.log(logger.INFO, f"removed auto from roles {user}")
         except Exception as e:
-            await console_log(user.guild, Bcolors.RED, f"couldn't remove an auto role from {user} due to: {e}.")
-
-
-# Takes messages and prints them to both the console
-async def console_log(arg_guild, arg_colour, arg_content, arg_error=False):
-    # Time logging
-    now = datetime.now()
-    now_string = now.strftime("%d/%m/%Y %H:%M:%S")
-    print(Bcolors.CYAN + f"[{now_string}] - [{arg_guild}] " + arg_colour + f"{arg_content}" + Bcolors.RESET)
-
-    # Fetch log-channel status, if returns true post to there
-    if not isinstance(arg_guild, str):
-        await guild_log(arg_guild, arg_content, arg_error)
+            logger.log(logger.ERROR, f"couldn't remove an auto role from {user} due to: {e}.")
 
 
 # Takes messages and prints them to the determined log channel in the guild (if it exists)
@@ -133,7 +123,7 @@ async def guild_log(arg_guild, arg_content, arg_error):
             channel = arg_guild.get_channel(int(guild_data.log_channel_id))
             await channel.send(f"```ini\n[{now_string}]\n{arg_content}\n```")
         except Exception as e:
-            await console_log(arg_guild.name, Bcolors.RED, e)
+            logger.log(logger.ERROR, f"{e}")
 
 
 # Check if user has higher authority level

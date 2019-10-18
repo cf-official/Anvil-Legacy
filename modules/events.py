@@ -1,6 +1,5 @@
 import discord
 from discord.ext import commands
-from support.bcolors import Bcolors
 from support import services
 from database import dbfunctions
 from support import config as cfg
@@ -19,6 +18,10 @@ class Events(commands.Cog):
         logger.log(logger.INFO, f"Logged in as: {self.client.user.name}")
         logger.log(logger.INFO, f"Bot ID: {self.client.user.id}")
         logger.log(logger.INFO, "====================================")
+        logger.log(logger.OK, "====================================")
+        logger.log(logger.VERBOSE, "====================================")
+        logger.log(logger.DEBUG, "====================================")
+        logger.log(logger.ERROR, "====================================")
         for guild in self.client.guilds:
             logger.log(logger.INFO, f"Connected to {guild}")
             # Add guild to db, add all users of said guild to db afterwards (relational)
@@ -62,7 +65,7 @@ class Events(commands.Cog):
     # Member interaction
     @commands.Cog.listener()
     async def on_member_join(self, member):
-        await services.console_log(member.guild, Bcolors.LIGHT_BLUE, f"{member} joined.")
+        logger.log(logger.VERBOSE, f"{member} joined {member.guild}")
         if not member.bot:
             dbfunctions.add_user(member.guild, member)
             await services.set_user_auto_roles(member, member.guild)
@@ -70,7 +73,7 @@ class Events(commands.Cog):
 
     @commands.Cog.listener()
     async def on_member_remove(self, member):
-        await services.console_log(member.guild, Bcolors.LIGHT_BLUE, f"{member} left.")
+        logger.log(logger.VERBOSE, f"{member} left {member.guild}")
 
     # Message interaction
     @commands.Cog.listener()
@@ -84,9 +87,9 @@ class Events(commands.Cog):
             if dbfunctions.check_user_last_message(user, user.guild.id):
                 # Add to activity score
                 dbfunctions.update_user_activity(user.guild, user, 1)
-            #check if the message was sent in CodeForge
+            # Check if the message was sent in CodeForge
             if cfevents.check_cf_guild(message.guild.id):
-                #passthrough to the CodeForge specefic message handler???
+                # Passthrough to the CodeForge specefic message handler???
                 await cfevents.cf_on_message_create(message)
 
     @commands.Cog.listener()
@@ -101,7 +104,7 @@ class Events(commands.Cog):
             message = await channel.fetch_message(payload.message_id)
         except Exception as e:
             # Couldn't fetch the message, probably because it was removed by another bot (looking at you sigma)
-            await services.console_log(str(guild), Bcolors.RED, f"{e}\nIn events.py : on_reaction_add")
+            logger.log(logger.ERROR, f"(events.py) on_raw_reaction_add (1): {e}")
             return
 
         reaction = payload.emoji
@@ -116,12 +119,12 @@ class Events(commands.Cog):
             except AttributeError:
                 pass
             except Exception as e:
-                await services.console_log(guild, Bcolors.RED, f"{e}\nIn events.py : on_reaction_add")
+                logger.log(logger.ERROR, f"(events.py) on_raw_reaction_add (2): {e}")
 
             if dbfunctions.check_reaction(str(emoji_id), guild_id):
                 # Give karma to user if karma event returns true (karma gain available from this person!)
                 if dbfunctions.set_karma_event(channel, user, message.author, guild_id):
-                    await services.console_log(guild, Bcolors.YELLOW, f"{user} gave {message.author} karma.")
+                    logger.log(logger.VERBOSE, f"{user} gave {message.author} karma.")
                     dbfunctions.update_user_karma(guild, message.author, 1)
 
 
