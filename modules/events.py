@@ -87,12 +87,21 @@ class Events(commands.Cog):
     @commands.Cog.listener()
     async def on_raw_reaction_add(self, payload):
         guild = self.client.get_guild(payload.guild_id)
-        channel = guild.get_channel(payload.channel_id)
-        message = await channel.fetch_message(payload.message_id)
-        reaction = payload.emoji
         user = guild.get_member(payload.user_id)
+        # Filter out bots
+        if user.bot: return
+
+        channel = guild.get_channel(payload.channel_id)
+        try:
+            message = await channel.fetch_message(payload.message_id)
+        except Exception as e:
+            # Couldn't fetch the message, probably because it was removed by another bot (looking at you sigma)
+            await services.console_log(guild, Bcolors.RED, f"{e}\nIn events.py : on_reaction_add")
+
+        reaction = payload.emoji
+
         # No giving karma to yourself or to bots
-        if message.author is not user and message.author.bot is False and user.bot is False:
+        if message.author is not user and message.author.bot is False:
             guild_id = guild.id
             emoji_id = reaction
             try:
