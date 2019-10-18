@@ -75,7 +75,7 @@ class Events(commands.Cog):
     @commands.Cog.listener()
     async def on_message(self, message):
         user = message.author
-        if user.bot is False:
+        if user.bot is False and user is not None:
             await services.set_user_auto_roles(user, user.guild)
             # Increment message count
             dbfunctions.update_user_messages(user.guild, user, 1)
