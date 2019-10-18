@@ -84,6 +84,10 @@ class Events(commands.Cog):
             if dbfunctions.check_user_last_message(user, user.guild.id):
                 # Add to activity score
                 dbfunctions.update_user_activity(user.guild, user, 1)
+            #check if the message was sent in CodeForge
+            if cfevents.check_cf_guild(message.guild.id):
+                #passthrough to the CodeForge specefic message handler???
+                await cfevents.cf_on_message_create(message)
 
     @commands.Cog.listener()
     async def on_raw_reaction_add(self, payload):
