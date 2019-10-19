@@ -1,13 +1,9 @@
-import discord
-from codeforge import cfconstants
-from discord.ext import commands
-from support.bcolors import Bcolors
-from support import services
 from support import config as cfg
-from database import dbfunctions
+from codeforge import cfconfig as cfcfg
+from discord.ext import commands
 from support import log
 logger = log.Logger
-cfc = cfconstants
+
 
 # Check if the guild in question if CodeForge
 def check_cf_guild(guild_id):
@@ -20,24 +16,26 @@ def check_cf_guild(guild_id):
 # Member interaction (on_member_join event can't have multiple instances, hence this function)
 async def cf_on_member_join(member):
     # Check if CF
-    CF = member.guild
-    if not check_cf_guild(CF.id): return
+    cf = member.guild
+    if not check_cf_guild(cf.id): return
     # Manage newly added bots
     if member.bot is True:
-        await services.console_log(member.guild, Bcolors.LIGHT_BLUE, f"{member} (bot) joined.")
-        bot_role = [role for role in CF.roles if role.name == "bot"]
+        logger.log(logger.VERBOSE, f"{member} (bot) joined.")
+        bot_role = cf.get_role(cfcfg.bot_role_id)
         await member.add_roles(bot_role)
 
 
 # Message handler specifically for integrating with CodeForge only features
 # such as the present yourself lockdown feature.
 async def cf_on_message_create(message):
+    # Check if CF
+    cf = message.guild
+    if not check_cf_guild(cf.id): return
     # Check if channel matches the stored id for #present-yourself
-    logger.log(logger.VERBOSE,f"{message.author} introduced themself, role applied", message.guild.name)
-    if message.channel.id == cfc.presentation['channel']: # 285749430689464320:
-        server = message.guild
-        member = server.get_member(message.author.id)
-        bot_role = [role for role in server.roles if role.name == cfc.presentation['role_name']]
+    if message.channel.id == cfcfg.present_channel_id:
+        logger.log(logger.VERBOSE, f"{message.author} introduced themself, role applied", message.guild.name)
+        member = cf.get_member(message.author.id)
+        bot_role = cf.get_role(cfcfg.present_channel_role_id)
         await member.add_roles(bot_role[0])
 
 

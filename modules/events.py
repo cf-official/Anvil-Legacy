@@ -58,14 +58,14 @@ class Events(commands.Cog):
             return
         # Rest of errors/issues
         else:
-            logger.log(logger.ERROR, f"{ctx.message.content} resulted in;\n{error}")
+            logger.log(logger.ERROR, f"{ctx.message.content} resulted in;\n{error}", ctx.guild)
         # Add error emoji
         await ctx.message.add_reaction(cfg.feedback_error_emoji_id)
 
     # Member interaction
     @commands.Cog.listener()
     async def on_member_join(self, member):
-        logger.log(logger.VERBOSE, f"{member} joined {member.guild}")
+        logger.log(logger.VERBOSE, f"{member} joined {member.guild}", member.guild)
         if not member.bot:
             dbfunctions.add_user(member.guild, member)
             await services.set_user_auto_roles(member, member.guild)
@@ -73,7 +73,7 @@ class Events(commands.Cog):
 
     @commands.Cog.listener()
     async def on_member_remove(self, member):
-        logger.log(logger.VERBOSE, f"{member} left {member.guild}")
+        logger.log(logger.VERBOSE, f"{member} left {member.guild}", member.guild)
 
     # Message interaction
     @commands.Cog.listener()
@@ -104,7 +104,7 @@ class Events(commands.Cog):
             message = await channel.fetch_message(payload.message_id)
         except Exception as e:
             # Couldn't fetch the message, probably because it was removed by another bot (looking at you sigma)
-            logger.log(logger.ERROR, f"(events.py) on_raw_reaction_add (1): {e}")
+            logger.log(logger.ERROR, f"(events.py) on_raw_reaction_add (1): {e}", guild)
             return
 
         reaction = payload.emoji
@@ -119,12 +119,12 @@ class Events(commands.Cog):
             except AttributeError:
                 pass
             except Exception as e:
-                logger.log(logger.ERROR, f"(events.py) on_raw_reaction_add (2): {e}")
+                logger.log(logger.ERROR, f"(events.py) on_raw_reaction_add (2): {e}", guild)
 
             if dbfunctions.check_reaction(str(emoji_id), guild_id):
                 # Give karma to user if karma event returns true (karma gain available from this person!)
                 if dbfunctions.set_karma_event(channel, user, message.author, guild_id):
-                    logger.log(logger.VERBOSE, f"{user} gave {message.author} karma.")
+                    logger.log(logger.VERBOSE, f"{user} gave {message.author} karma.", guild)
                     dbfunctions.update_user_karma(guild, message.author, 1)
 
 

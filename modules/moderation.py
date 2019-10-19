@@ -15,7 +15,7 @@ class Moderation(commands.Cog):
     @commands.has_permissions(kick_members=True)
     async def kick(self, ctx, user: discord.Member, *, reason=None):
         if services.authority_check(user, ctx.author):
-            logger.log(logger.VERBOSE, f"{ctx.author} kicked {user}.")
+            logger.log(logger.VERBOSE, f"{ctx.author} kicked {user}.", ctx.guild)
             await user.kick(reason=reason)
         else:
             await ctx.channel.send("Lacking authority to do this")
@@ -25,7 +25,7 @@ class Moderation(commands.Cog):
     @commands.has_permissions(ban_members=True)
     async def ban(self, ctx, user: discord.Member, *, reason=None):
         if services.authority_check(user, ctx.author):
-            logger.log(logger.VERBOSE, f"{ctx.author} banned {user}.")
+            logger.log(logger.VERBOSE, f"{ctx.author} banned {user}.", ctx.guild)
             await user.ban(reason=reason)
         else:
             await ctx.channel.send("Lacking authority to do this")
@@ -39,7 +39,7 @@ class Moderation(commands.Cog):
         for ban_entry in banned_users:
             user = ban_entry.user
             if (user.name, user.discriminator) == (member_name, member_discriminator):
-                logger.log(logger.VERBOSE, f"{ctx.author} unbanned {user}")
+                logger.log(logger.VERBOSE, f"{ctx.author} unbanned {user}", ctx.guild)
                 await ctx.guild.unban(user)
                 return
 
