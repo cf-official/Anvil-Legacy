@@ -5,7 +5,8 @@ from support.bcolors import Bcolors
 from support import services
 from support import config as cfg
 from database import dbfunctions
-
+from support import log
+logger = log.Logger
 cfc = cfconstants
 
 # Check if the guild in question if CodeForge
@@ -32,9 +33,8 @@ async def cf_on_member_join(member):
 # such as the present yourself lockdown feature.
 async def cf_on_message_create(message):
     # Check if channel matches the stored id for #present-yourself
-    print(message.channel.id, cfc.presentation['channel'], message.channel.id == cfc.presentation['channel'])
+    logger.log(logger.VERBOSE,f"{message.author} introduced themself, role applied", message.guild.name)
     if message.channel.id == cfc.presentation['channel']: # 285749430689464320:
-        print("valid")
         server = message.guild
         member = server.get_member(message.author.id)
         bot_role = [role for role in server.roles if role.name == cfc.presentation['role_name']]

@@ -56,4 +56,3 @@ while True:
         logger.log(logger.ERROR, f'Waiting {sleep_timer} seconds before next reconnection attempt...')
         sleep_timer += 5
         time.sleep(sleep_timer)
-

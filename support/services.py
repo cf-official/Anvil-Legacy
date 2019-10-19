@@ -96,16 +96,16 @@ async def set_user_auto_roles(user, guild):
     if bool(allowed_roles):
         try:
             await user.add_roles(*allowed_roles, reason="Automatic role update")
-            logger.log(logger.INFO, f"added auto roles to {user}")
+            logger.log(logger.INFO, f"added auto roles to {user}", guild.name)
         except Exception as e:
-            logger.log(logger.ERROR, f"couldn't add an auto role to {user} due to: {e}.")
+            logger.log(logger.ERROR, f"couldn't add an auto role to {user} due to: {e}.", guild.name)
     # Removed roles. Might break if missing required perms!
     if bool(not_allowed_roles):
         try:
             await user.remove_roles(*not_allowed_roles, reason="Automatic role update")
-            logger.log(logger.INFO, f"removed auto from roles {user}")
+            logger.log(logger.INFO, f"removed auto from roles {user}", guild.name)
         except Exception as e:
-            logger.log(logger.ERROR, f"couldn't remove an auto role from {user} due to: {e}.")
+            logger.log(logger.ERROR, f"couldn't remove an auto role from {user} due to: {e}.", guild.name)
 
 
 # Takes messages and prints them to the determined log channel in the guild (if it exists)
