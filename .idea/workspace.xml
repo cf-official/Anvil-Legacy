@@ -9,7 +9,20 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300" />
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/support/log.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="476">
+              <caret line="34" column="46" selection-start-line="34" selection-start-column="46" selection-end-line="34" selection-end-column="46" />
+              <folding>
+                <element signature="e#205#226#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -20,7 +33,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>search_user</find>
       <find>now</find>
       <find>sum</find>
       <find>first</find>
@@ -50,6 +62,7 @@
       <find>print</find>
       <find>console</find>
       <find>logger</find>
+      <find>source</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -78,7 +91,6 @@
         <option value="$PROJECT_DIR$/database/dbfunctions.py" />
         <option value="$PROJECT_DIR$/support/config.py" />
         <option value="$PROJECT_DIR$/support/logger.py" />
-        <option value="$PROJECT_DIR$/support/log.py" />
         <option value="$PROJECT_DIR$/codeforge/cfconstants.py" />
         <option value="$PROJECT_DIR$/codeforge/cfconfig.py" />
         <option value="$PROJECT_DIR$/codeforge/cfevents.py" />
@@ -87,6 +99,7 @@
         <option value="$PROJECT_DIR$/modules/moderation.py" />
         <option value="$PROJECT_DIR$/modules/events.py" />
         <option value="$PROJECT_DIR$/modules/administration.py" />
+        <option value="$PROJECT_DIR$/support/log.py" />
       </list>
     </option>
   </component>
@@ -218,8 +231,9 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1066" extended-state="6" />
+    <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.11064278" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.11064278" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -328,16 +342,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/support/log.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="340">
-          <caret line="20" column="57" lean-forward="true" selection-start-line="20" selection-start-column="57" selection-end-line="20" selection-end-column="57" />
-          <folding>
-            <element signature="e#205#226#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/main.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="935">
@@ -404,6 +408,16 @@
           <caret line="81" column="32" selection-start-line="81" selection-start-column="28" selection-end-line="81" selection-end-column="32" />
           <folding>
             <element signature="e#0#35#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/support/log.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="476">
+          <caret line="34" column="46" selection-start-line="34" selection-start-column="46" selection-end-line="34" selection-end-column="46" />
+          <folding>
+            <element signature="e#205#226#0" expanded="true" />
           </folding>
         </state>
       </provider>
