@@ -17,7 +17,8 @@ initialize_sql(engine)
 
 # Check custom guild prefix'
 def get_prefix(client, message):
-    prefix = [cfg.default_prefix, dbfunctions.get_guild_prefix(message.guild)]
+    guild_prefix = dbfunctions.get_guild_prefix(message.guild) if message.guild is not None else cfg.default_prefix
+    prefix = [cfg.default_prefix, guild_prefix]
     return prefix
 
 

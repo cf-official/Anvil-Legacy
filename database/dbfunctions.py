@@ -221,13 +221,13 @@ def check_reaction(arg_emoji_id, arg_guild_id):
 
 
 # Add roles to the autorole list, with required conditions
-def add_role(arg_guild_id, arg_role, arg_point_req, arg_karma_req):
+def add_role(arg_guild_id, arg_role, arg_message_req, arg_point_req, arg_karma_req, arg_token_req):
     session = Session()
     guild = session.query(Guild).filter(Guild.guild_id == arg_guild_id).first()
     # Check if role already exists for guild
     if sum(str(x.role_id) == str(arg_role.id) for x in guild.roles) is 0:
         # Create new role object for db
-        new_role = Role(arg_role.id, arg_point_req, arg_karma_req)
+        new_role = Role(arg_role.id, arg_message_req, arg_point_req, arg_karma_req, arg_token_req)
         guild.roles.append(new_role)
         session.add(new_role)
     session.commit()

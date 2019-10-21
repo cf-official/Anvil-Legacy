@@ -9,7 +9,6 @@ from database import dbfunctions
 class General(commands.Cog):
     def __init__(self, client):
         self.client = client
-        self.sniped_message = None
 
     # Commands
     @commands.command()
@@ -92,24 +91,6 @@ class General(commands.Cog):
             embed.add_field(name=f"Nitro boosters ({len(boosters)})", value=" ".join([booster.mention for booster in boosters]))
         await ctx.send(embed=embed)
 
-    # Snipe command set up
-    @commands.Cog.listener()
-    async def on_message_delete(self, message):
-        self.sniped_message = message
-
-    '''
-    @commands.command()
-    async def snipe(self, ctx):
-        if self.sniped_message is None:
-            await ctx.send("Nothing to be sniped.")
-        else:
-            embed = discord.Embed(colour=self.sniped_message.author.color, timestamp=self.sniped_message.created_at)
-            embed.set_thumbnail(url=self.sniped_message.author.avatar_url)
-            embed.set_footer(text=cfg.embed_footer, icon_url=self.client.user.avatar_url)
-            embed.add_field(name=f"{self.sniped_message.author} said:", value=self.sniped_message.content)
-            await ctx.send(embed=embed)
-    '''
-
     @commands.command()
     async def roles(self, ctx):
         roles_raw = dbfunctions.retrieve_roles(ctx.guild.id)
@@ -117,10 +98,14 @@ class General(commands.Cog):
         roles_string = ""
         for role in roles:
             roles_string += role.role.mention
+            if role.message_req > 0:
+                roles_string += "\n Messages: " + str(role.message_req)
             if role.point_req > 0:
                 roles_string += "\n Points: " + str(role.point_req)
             if role.karma_req > 0:
                 roles_string += "\n Karma: " + str(role.karma_req)
+            if role.token_req > 0:
+                roles_string += "\n Tokens: " + str(role.token_req)
             roles_string += "\n\n"
 
         # Create embed

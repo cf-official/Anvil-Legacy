@@ -56,16 +56,17 @@ class Administration(commands.Cog):
 
     @commands.command()
     @commands.has_permissions(administrator=True)
-    async def add_role(self, ctx, role: discord.Role, point_req=0, karma_req=0):
-        logger.log(logger.VERBOSE, f"{ctx.author} added {role} with point req {point_req} and karma req {karma_req}", ctx.guild)
-        dbfunctions.add_role(ctx.guild.id, role, point_req, karma_req)
+    async def add_role(self, ctx, role: discord.Role, message_req=0, point_req=0, karma_req=0, token_req=0):
+        logger.log(logger.VERBOSE, f"{ctx.author} added auto-role: {role}. message req: {message_req}, "
+                                   f"point req: {point_req}, karma req: {karma_req}, token_req: {token_req}", ctx.guild)
+        dbfunctions.add_role(ctx.guild.id, role, message_req, point_req, karma_req, token_req)
 
     @commands.command()
     @commands.has_permissions(administrator=True)
     async def remove_role(self, ctx, role: discord.Role):
-        logger.log(logger.VERBOSE, f"{ctx.author} removed {role}", ctx.guild)
         # Remove role from DB and return if role existed in the DB in the first place;
         if dbfunctions.remove_role(ctx.guild.id, role):
+            logger.log(logger.VERBOSE, f"{ctx.author} removed auto-role: {role}", ctx.guild)
             # Check for any guild members who still have this auto-role and remove it
             try:
                 for member in ctx.guild.members:

@@ -31,19 +31,19 @@ class Logger(Enum):
 
     # Snip and slice the source tag until it formatted properly for logging
     @staticmethod
-    def format_source(content):
-        if content is "Client": return content
-        content = content.name
-        if len(content) > 10:
+    def format_source(source):
+        if source is not "Client":
+            source = source.name
+        if len(source) > 12:
             # Split the content at the 10th character and square brace
-            content = "[" + content[0:9] + '...]'
+            source = "[" + source[0:11] + '...]'
         else:
-            content = "[" + content + ']' # square brace the content
+            source = "[" + source + ']' # square brace the content
         spacer = ""
-        while (len(spacer)+len(content)) < 19:
+        while (len(spacer)+len(source)) < 19:
             # Add a single space to the spacer to allow the logs full alignment
             spacer += " "
-        return "\x1b[1;35m"+content+"\x1b[0m"+spacer
+        return "\x1b[1;35m"+source+"\x1b[0m"+spacer
 
     # Perform custom logging
     @staticmethod

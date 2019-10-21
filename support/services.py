@@ -52,10 +52,12 @@ def get_roles_by_id(guild, list_roles_id):
         # Create role dict with attributes after fetching role object
         x = guild.get_role(int(role.role_id))
         dbrole = AttrDict()
-        dbrole.update({"role": x, "point_req": role.point_requirement, "karma_req": role.karma_requirement})
+        dbrole.update({"role": x, "message_req": role.message_requirement,"point_req": role.point_requirement,
+                       "karma_req": role.karma_requirement, "token_req": role.token_requirement})
         # Add role dict to list
         list_roles_objects.append(dbrole)
-    list_roles_objects = sorted(list_roles_objects, key=operator.itemgetter('point_req', 'karma_req'), reverse=True)
+    list_roles_objects = sorted(list_roles_objects, key=operator.itemgetter('point_req', 'message_req',
+                                                                            'karma_req', 'token_req'), reverse=True)
     return list_roles_objects
 
 
@@ -65,8 +67,8 @@ async def set_user_auto_roles(user, guild):
     auto_roles = get_roles_by_id(guild, roles_raw)
 
     user_data = dbfunctions.retrieve_user(user)
-    user_points, user_karma = user_data.activity_points, user_data.karma
-
+    user_messages, user_points, user_karma, user_tokens = user_data.messages_sent, \
+                                                          user_data.activity_points, user_data.karma, user_data.tokens
     # Role lists
     all_auto_roles = []
     current_roles = user.roles
@@ -76,7 +78,8 @@ async def set_user_auto_roles(user, guild):
     # Check which auto_roles apply to the current user
     for role in auto_roles:
         all_auto_roles.append(role.role)
-        if user_points >= role.point_req and user_karma >= role.karma_req:
+        if user_messages >= role.message_req and user_points >= role.point_req and user_karma >= role.karma_req \
+                and user_tokens >= role.token_req:
             allowed_roles.append(role.role)
 
     # Remove auto roles the user shouldn't have from current_roles
