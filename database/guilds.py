@@ -5,6 +5,7 @@ from datetime import date
 # This imports are important because it changes loading order.
 from database import users
 from database import roles
+from database import channels
 
 
 guilds_users_association = Table(
@@ -17,6 +18,12 @@ guilds_roles_association = Table(
     'guilds_roles', Base.metadata,
     Column('guild_id', Integer, ForeignKey('guilds.id')),
     Column('role_id', Integer, ForeignKey('roles.id'))
+)
+
+guilds_channels_association = Table(
+    'guilds_channels', Base.metadata,
+    Column('guild_id', Integer, ForeignKey('guilds.id')),
+    Column('channel_id', Integer, ForeignKey('channels.id'))
 )
 
 
@@ -34,6 +41,7 @@ class Guild(Base):
 
     users = relationship("User", secondary='guilds_users', cascade="save-update")
     roles = relationship("Role", secondary='guilds_roles', cascade="save-update")
+    channels = relationship("Channel", secondary='guilds_channels', cascade="save-update")
 
     def __init__(self, name, guild_id):
         self.name = name

@@ -16,7 +16,18 @@ class Listener(commands.Cog):
 
     def bot_check(self, ctx):
         # Make sure bot doesn't reply to DM usage
-        return ctx.guild is not None
+        if ctx.guild is None: return False
+
+        # Make sure owners always get a free pass
+        if ctx.author.guild_permissions.administrator: return True
+
+        # Also make sure command is being used in allowed channel
+        channels = services.get_channels_by_id(ctx.guild, dbfunctions.retrieve_channels(ctx.guild.id))
+        if channels:
+            if ctx.channel not in channels: return False
+
+        # If it somehow passes all conditions but fails to return properly.
+        return True
 
     def bot_check_once(self, ctx):
         # Not being used for now

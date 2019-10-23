@@ -62,9 +62,9 @@ class Administration(commands.Cog):
 
     @commands.command()
     async def add_role(self, ctx, role: discord.Role, message_req=0, point_req=0, karma_req=0, token_req=0):
+        dbfunctions.add_role(ctx.guild.id, role, message_req, point_req, karma_req, token_req)
         logger.log(logger.VERBOSE, f"{ctx.author} added auto-role: {role}. message req: {message_req}, "
                                    f"point req: {point_req}, karma req: {karma_req}, token_req: {token_req}", ctx.guild)
-        dbfunctions.add_role(ctx.guild.id, role, message_req, point_req, karma_req, token_req)
 
     @commands.command()
     async def remove_role(self, ctx, role: discord.Role):
@@ -80,6 +80,16 @@ class Administration(commands.Cog):
             # But if the bot cannot remove said roles...
             except Exception as e:
                 logger.log(logger.ERROR, f"bot lacked authority level to remove {role} from people.", ctx.guild)
+
+    @commands.command()
+    async def add_channel(self, ctx, channel: discord.TextChannel):
+        dbfunctions.add_channel(ctx.guild.id, channel)
+        logger.log(logger.VERBOSE, f"{ctx.author} added a bot commands channel: {channel}", ctx.guild)
+
+    @commands.command()
+    async def remove_channel(self, ctx, channel: discord.TextChannel):
+        dbfunctions.remove_channel(ctx.guild.id, channel)
+        logger.log(logger.VERBOSE, f"{ctx.author} removed a bot commands channel: {channel}", ctx.guild)
 
 
 def setup(client):

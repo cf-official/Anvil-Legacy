@@ -2,6 +2,7 @@ from database.dbbase import Session
 from database.guilds import Guild
 from database.users import User
 from database.roles import Role
+from database.channels import Channel
 from database.karma import KarmaEvents
 from sqlalchemy import asc, desc
 from support import services
@@ -307,3 +308,39 @@ def retrieve_top_users(arg_guild_id):
     session.commit()
     session.close()
     return dbresults
+
+
+# Add channels to the set of channels where bot commands are allowed
+def add_channel(arg_guild_id, arg_channel):
+    session = Session()
+    guild = session.query(Guild).filter(Guild.guild_id == arg_guild_id).first()
+    # Check if channel already exists for guild
+    if sum(str(x.channel_id) == str(arg_channel.id) for x in guild.channels) is 0:
+        # Create new channel object for db
+        new_channel = Channel(arg_channel.id)
+        guild.channels.append(new_channel)
+        session.add(new_channel)
+    session.commit()
+    session.close()
+
+
+# Remove bot commands channel for guild
+def remove_channel(arg_guild_id, arg_channel):
+    session = Session()
+    guild = session.query(Guild).filter(Guild.guild_id == arg_guild_id).first()
+    # Fetch channel through guild
+    channel_to_remove = next((x for x in guild.channels if int(x.channel_id) == int(arg_channel.id)), None)
+    if channel_to_remove is not None:
+        guild.channels.remove(channel_to_remove)
+        session.delete(channel_to_remove)
+    session.commit()
+    session.close()
+
+
+# Retrieve all bot commands channels
+def retrieve_channels(arg_guild_id):
+    session = Session()
+    guild = session.query(Guild).filter(Guild.guild_id == arg_guild_id).first()
+    channels = guild.channels.copy()
+    session.close()
+    return channels

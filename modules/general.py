@@ -36,7 +36,7 @@ class General(commands.Cog):
         embed.set_footer(text=cfg.embed_footer, icon_url=self.client.user.avatar_url)
 
         embed.add_field(name="-",
-                        value="**ID:**" + str(user.id) + "\n"
+                        value="**ID:** " + str(user.id) + "\n"
                               "**Created at:** " + user.created_at.strftime("%a, %#d %B %Y, %I:%M %p UTC") + "\n"
                               "**Joined at:** " + user.joined_at.strftime("%a, %#d %B %Y, %I:%M %p UTC") + "\n"
                               f"**{ordinal} member of {ctx.guild}.**", inline=False)
@@ -82,20 +82,20 @@ class General(commands.Cog):
         embed.set_footer(text=cfg.embed_footer, icon_url=self.client.user.avatar_url)
 
         # Set fields
-        embed.add_field(name=f"Members: ({len(members_total)})", value=f"<:greendot:617798086403686432>{members_online} - <:reddot:617798085938118730>{members_offline} - 🤖 {members_bots}")
+        embed.add_field(name=f"Members ({len(members_total)}): ", value=f"<:greendot:617798086403686432>{members_online} - <:reddot:617798085938118730>{members_offline} - 🤖 {members_bots}")
         embed.add_field(name="Created at:", value=ctx.guild.created_at.strftime("%a, %#d %B %Y, %I:%M %p UTC"))
 
         # Make sure roles are listed correctly, even if empty
-        if not roles:
+        if roles:
             embed.add_field(name=f"Roles ({len(roles)}):", value=" ".join([role.mention for role in roles]))
         else:
             embed.add_field(name="Roles (0):", value="None")
 
         # Show nitro boosters
         if not boosters:
-            embed.add_field(name=f"Nitro boosters (0)", value="None ")
+            embed.add_field(name=f"Nitro boosters (0): ", value="None ")
         else:
-            embed.add_field(name=f"Nitro boosters ({len(boosters)})", value=" ".join([booster.mention for booster in boosters]))
+            embed.add_field(name=f"Nitro boosters ({len(boosters)}): ", value=" ".join([booster.mention for booster in boosters]))
         await ctx.send(embed=embed)
 
     @commands.command()

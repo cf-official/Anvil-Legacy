@@ -61,6 +61,16 @@ def get_roles_by_id(guild, list_roles_id):
     return list_roles_objects
 
 
+def get_channels_by_id(guild, list_channels_id):
+    list_channels_objects = []
+    for channel in list_channels_id:
+        # Create role dict with attributes after fetching role object
+        x = guild.get_channel(int(channel.channel_id))
+        # Add role dict to list
+        list_channels_objects.append(x)
+    return list_channels_objects
+
+
 async def set_user_auto_roles(user, guild):
     # Auto role and user data
     roles_raw = dbfunctions.retrieve_roles(guild.id)
