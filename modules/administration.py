@@ -1,5 +1,6 @@
 import discord
 from discord.ext import commands
+from support import config as cfg
 from emoji import UNICODE_EMOJI
 from database import dbfunctions
 from support import log
@@ -12,16 +13,22 @@ class Administration(commands.Cog):
     def __init__(self, client):
         self.client = client
 
+    # Make sure the admin knows it worked!
+    async def cog_after_invoke(self, ctx):
+        await ctx.message.add_reaction(cfg.feedback_success_emoji_id)
+
+    # Make sure only admins can use this cog's commands
+    async def cog_check(self, ctx):
+        return ctx.author.guild_permissions.administrator
+
     # Set custom prefix to guild
     @commands.command()
-    @commands.has_permissions(administrator=True)
     async def set_prefix(self, ctx, *, new_prefix):
         dbfunctions.set_guild_prefix(ctx.guild, new_prefix)
         logger.log(logger.VERBOSE, f"{ctx.author} changed server prefix to {new_prefix}", ctx.guild)
 
     # Set karma reaction emoji
     @commands.command()
-    @commands.has_permissions(administrator=True)
     async def set_karma_reaction(self, ctx, emoji):
         # Try for the custom emoji
         emoji_id = ""
@@ -46,7 +53,6 @@ class Administration(commands.Cog):
 
     # Set log_channel_id
     @commands.command()
-    @commands.has_permissions(administrator=True)
     async def set_log_channel_id(self, ctx, channel: discord.TextChannel = None):
         logger.log(logger.VERBOSE, f"{ctx.author} set logging channel to {channel}", ctx.guild)
         if channel is None:
@@ -55,14 +61,12 @@ class Administration(commands.Cog):
             dbfunctions.set_guild_log_channel(ctx.guild, channel.id)
 
     @commands.command()
-    @commands.has_permissions(administrator=True)
     async def add_role(self, ctx, role: discord.Role, message_req=0, point_req=0, karma_req=0, token_req=0):
         logger.log(logger.VERBOSE, f"{ctx.author} added auto-role: {role}. message req: {message_req}, "
                                    f"point req: {point_req}, karma req: {karma_req}, token_req: {token_req}", ctx.guild)
         dbfunctions.add_role(ctx.guild.id, role, message_req, point_req, karma_req, token_req)
 
     @commands.command()
-    @commands.has_permissions(administrator=True)
     async def remove_role(self, ctx, role: discord.Role):
         # Remove role from DB and return if role existed in the DB in the first place;
         if dbfunctions.remove_role(ctx.guild.id, role):

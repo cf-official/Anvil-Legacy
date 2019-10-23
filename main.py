@@ -31,7 +31,12 @@ client = commands.Bot(command_prefix=get_prefix)
 @commands.is_owner()
 async def load(ctx, extension):
     extension = extension.lower()
-    client.load_extension(f'modules.{extension}')
+    try:
+        client.load_extension(f'modules.{extension}')
+    except:
+        logger.log(logger.ERROR, "Tried loading a module that either didn't exist or was already loaded")
+    else:
+        logger.log(logger.DEBUG, f"Loaded the module \"{extension}\".")
 
 
 # Unloading modules
@@ -39,7 +44,12 @@ async def load(ctx, extension):
 @commands.is_owner()
 async def unload(ctx, extension):
     extension = extension.lower()
-    client.unload_extension(f'modules.{extension}')
+    try:
+        client.unload_extension(f'modules.{extension}')
+    except:
+        logger.log(logger.ERROR, "Tried unloading a module that either didn't exist or was already unloaded")
+    else:
+        logger.log(logger.DEBUG, f"Unloaded the module \"{extension}\".")
 
 # Loading all available modules on startup
 for filename in os.listdir('./modules'):

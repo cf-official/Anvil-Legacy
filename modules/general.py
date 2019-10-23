@@ -4,6 +4,7 @@ from support import config as cfg
 from support.services import Search
 from support import services
 from database import dbfunctions
+import math
 
 
 class General(commands.Cog):
@@ -24,6 +25,9 @@ class General(commands.Cog):
         roles = [role for role in user.roles]
         # Slice @@everyone out of the list
         roles = roles[1:]
+        # Get user position in guild history (the Xth user to join the guild... that's still in the guild)
+        position = sorted(ctx.guild.members, key=lambda x: x.joined_at).index(user) + 1
+        ordinal = get_ordinal(position)
 
         # Create embed
         embed = discord.Embed(colour=user.color, timestamp=ctx.message.created_at, title="*Questions?*", url=cfg.embed_url)
@@ -32,9 +36,11 @@ class General(commands.Cog):
         embed.set_thumbnail(url=user.avatar_url)
         embed.set_footer(text=cfg.embed_footer, icon_url=self.client.user.avatar_url)
 
-        embed.add_field(name="ID:", value=user.id, inline=False)
-        embed.add_field(name="Created at:", value=user.created_at.strftime("%a, %#d %B %Y, %I:%M %p UTC"), inline=False)
-        embed.add_field(name="Joined at:", value=user.joined_at.strftime("%a, %#d %B %Y, %I:%M %p UTC"), inline=False)
+        embed.add_field(name="-",
+                        value="**ID:**" + str(user.id) + "\n"
+                              "**Created at:** " + user.created_at.strftime("%a, %#d %B %Y, %I:%M %p UTC") + "\n"
+                              "**Joined at:** " + user.joined_at.strftime("%a, %#d %B %Y, %I:%M %p UTC") + "\n"
+                              f"**{ordinal} member of {ctx.guild}.**", inline=False)
 
         # Make sure roles are listed correctly, even if empty
         if roles:
@@ -79,7 +85,7 @@ class General(commands.Cog):
         embed.add_field(name="Created at:", value=ctx.guild.created_at.strftime("%a, %#d %B %Y, %I:%M %p UTC"))
 
         # Make sure roles are listed correctly, even if empty
-        if True:
+        if not roles:
             embed.add_field(name=f"Roles ({len(roles)}):", value=" ".join([role.mention for role in roles]))
         else:
             embed.add_field(name="Roles (0):", value="None")
@@ -124,6 +130,7 @@ class General(commands.Cog):
     async def leaderboard(self, ctx, lbtype=None):
         embed = discord.Embed(colour=self.client.user.color, timestamp=ctx.message.created_at, title="*Questions?*",
                               url=cfg.embed_url)
+        embed.set_footer(text=cfg.embed_footer, icon_url=self.client.user.avatar_url)
         top_results = dbfunctions.retrieve_top_users(ctx.guild.id)
         # Check if lbtype matches any, else post default leaderboard
         if lbtype == "messages":
@@ -158,35 +165,11 @@ class General(commands.Cog):
         await ctx.send(embed=embed)
 
 
+def get_ordinal(number):
+    ordinal = lambda n: "%d%s" % (n, "tsnrhtdd"[(math.floor(n / 10) % 10 != 1) * (n % 10 < 4) * n % 10::4])
+    result = ordinal(number)
+    return result
+
+
 def setup(client):
     client.add_cog(General(client))
-
-
-"""
-@client.command(aliases=['8ball'])
-async def _8ball(ctx, *, question):
-    responses = [   'It is certain',
-                    'It is decidedly so',
-                    'Without a doubt',
-                    'Yes – definitely',
-                    'You may rely on it',
-                    'As I see it, yes',
-                    'Most likely',
-                    'Outlook good',
-                    'Yes',
-                    'Signs point to yes',
-
-                    ',Reply hazy, try again',
-                    'Ask again later',
-                    'Better not tell you now',
-                    'Cannot predict now',
-                    'Concentrate and ask again',
-
-                    'Don\'t count on it',
-                    'My reply is no',
-                    'My sources say no',
-                    ',Outlook not so good',
-                    'Very doubtful']
-    await ctx.send(f'Q: {question}\n'
-                   f'A: {random.choice(responses)}')
-"""

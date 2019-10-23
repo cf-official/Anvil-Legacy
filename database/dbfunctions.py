@@ -149,6 +149,16 @@ def update_user_karma(arg_guild, arg_user, arg_increment):
     session.close()
 
 
+# Updates amount of tokens stored in DB based on arg: increment
+def update_user_tokens(arg_guild, arg_user, arg_increment):
+    session = Session()
+    guild = session.query(Guild).filter(Guild.guild_id == arg_guild.id).first()
+    user = next((x for x in guild.users if int(x.user_id) == int(arg_user.id)), None)
+    user.tokens += arg_increment
+    session.commit()
+    session.close()
+
+
 # Store karma giving event with required datetime
 def set_karma_event(arg_channel, arg_user_giving, arg_user_receiving, arg_guild_id):
     session = Session()

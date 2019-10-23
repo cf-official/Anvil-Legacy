@@ -131,7 +131,7 @@ async def guild_log(arg_guild, arg_content, arg_error):
 
 # Check if user has higher authority level
 def authority_check(arg_target_user, arg_user):
-    if arg_user.top_role > arg_target_user.top_role:
+    if arg_user.top_role >= arg_target_user.top_role:
         return True
     else:
         return False

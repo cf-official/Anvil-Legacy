@@ -1,5 +1,6 @@
 import discord
 from database import dbfunctions
+from support import config as cfg
 from discord.ext import commands
 from support import services
 from support import log
@@ -9,6 +10,10 @@ logger = log.Logger
 class Moderation(commands.Cog):
     def __init__(self, client):
         self.client = client
+
+    # Make sure the moderator knows it worked!
+    async def cog_after_invoke(self, ctx):
+        await ctx.message.add_reaction(cfg.feedback_success_emoji_id)
 
     # Kick a user
     @commands.command()
@@ -51,27 +56,50 @@ class Moderation(commands.Cog):
     # Modify user statistics because they're cheating scum or something
     @commands.command()
     @commands.has_permissions(kick_members=True)
-    async def modify_activity(self, ctx, user: discord.User, amount : int):
+    async def modify_activity(self, ctx, user: discord.Member, amount : int):
+        if amount == 0: return
         if services.authority_check(user, ctx.author):
             dbfunctions.update_user_activity(ctx.guild, user, amount)
+            logger.log(logger.VERBOSE, modification_text(ctx.author, user, amount, "activity points."), source=ctx.guild)
         else:
             await ctx.channel.send("Lacking authority to do this")
 
     @commands.command()
     @commands.has_permissions(kick_members=True)
-    async def modify_message(self, ctx, user: discord.User, amount : int):
+    async def modify_message(self, ctx, user: discord.Member, amount : int):
+        if amount == 0: return
         if services.authority_check(user, ctx.author):
             dbfunctions.update_user_messages(ctx.guild, user, amount)
+            logger.log(logger.VERBOSE, modification_text(ctx.author, user, amount, "message count."), source=ctx.guild)
         else:
             await ctx.channel.send("Lacking authority to do this")
 
     @commands.command()
     @commands.has_permissions(kick_members=True)
-    async def modify_karma(self, ctx, user: discord.User, amount : int):
+    async def modify_karma(self, ctx, user: discord.Member, amount: int):
+        if amount == 0: return
         if services.authority_check(user, ctx.author):
             dbfunctions.update_user_karma(ctx.guild, user, amount)
+            logger.log(logger.VERBOSE, modification_text(ctx.author, user, amount, "karma."), source=ctx.guild)
         else:
             await ctx.channel.send("Lacking authority to do this")
+
+    @commands.command()
+    @commands.has_permissions(kick_members=True)
+    async def modify_tokens(self, ctx, user: discord.Member, amount: int):
+        if amount == 0: return
+        if services.authority_check(user, ctx.author):
+            dbfunctions.update_user_tokens(ctx.guild, user, amount)
+            logger.log(logger.VERBOSE, modification_text(ctx.author, user, amount, "tokens."), source=ctx.guild)
+        else:
+            await ctx.channel.send("Lacking authority to do this")
+
+
+def modification_text(arg_user, arg_target_user, arg_amount, arg_modification_type):
+    if arg_amount > 0:
+        return f"{arg_user} added {arg_amount} to {arg_target_user}'s {arg_modification_type}"
+    else:
+        return f"{arg_user} removed {arg_amount} from {arg_target_user}'s {arg_modification_type}"
 
 
 def setup(client):
