@@ -21,7 +21,6 @@ class General(commands.Cog):
 
         # Fetch relevant user and accompanying roles
         user = Search.search_user(ctx, user)
-        dbuser = dbfunctions.retrieve_user(user)
         roles = [role for role in user.roles]
         # Slice @@everyone out of the list
         roles = roles[1:]
@@ -49,12 +48,14 @@ class General(commands.Cog):
         else:
             embed.add_field(name="Roles (0):", value="None")
             embed.add_field(name="Top role:", value="None", inline=True)
-
         embed.add_field(name="Bot?", value=user.bot, inline=True)
-        embed.add_field(name="User involvement", value=":e_mail: Messages sent: " + str(
-            dbuser.messages_sent) + " :speaking_head: Activity: " + str(dbuser.activity_points), inline=False)
-        embed.add_field(name="User stats", value=":angel: Karma: " + str(dbuser.karma) +
-                                                 " :moneybag: Tokens: " + str(dbuser.tokens), inline=False)
+
+        if not user.bot:
+            dbuser = dbfunctions.retrieve_user(user)
+            embed.add_field(name="User involvement", value=":e_mail: Messages sent: " + str(
+                dbuser.messages_sent) + " :speaking_head: Activity: " + str(dbuser.activity_points), inline=False)
+            embed.add_field(name="User stats", value=":angel: Karma: " + str(dbuser.karma) +
+                                                     " :moneybag: Tokens: " + str(dbuser.tokens), inline=False)
         await ctx.send(embed=embed)
 
     @commands.command(aliases=['sinfo', 'si'])
