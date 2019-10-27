@@ -52,8 +52,11 @@ class Events(commands.Cog):
         logger.log(logger.VERBOSE, f"{member} joined {member.guild}", member.guild)
         if not member.bot:
             dbfunctions.add_user(member.guild, member)
-            await services.set_user_auto_roles(member, member.guild)
-        await cfevents.cf_on_member_join(member)
+            if cfevents.check_cf_guild(message.guild.id):
+                # Passthrough to the CodeForge specefic message handler???
+                await cfevents.cf_on_member_join(member)
+            else:
+                await services.set_user_auto_roles(member, member.guild)
 
     @commands.Cog.listener()
     async def on_member_remove(self, member):
