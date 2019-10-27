@@ -132,7 +132,7 @@ class General(commands.Cog):
         embed = discord.Embed(colour=self.client.user.color, timestamp=ctx.message.created_at, title="*Questions?*",
                               url=cfg.embed_url)
         embed.set_footer(text=cfg.embed_footer, icon_url=self.client.user.avatar_url)
-        top_results = dbfunctions.retrieve_top_users(ctx.guild.id)
+        top_results = dbfunctions.retrieve_top_users(ctx.guild)
         # Check if lbtype matches any, else post default leaderboard
         if lbtype == "messages":
             embed.add_field(name="Leaderboard", value="\n".join(

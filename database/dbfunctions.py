@@ -272,35 +272,39 @@ def remove_role(arg_guild_id, arg_role):
 
 
 # Retrieve all top 10 users per stat from guild
-def retrieve_top_users(arg_guild_id):
+def retrieve_top_users(arg_guild):
     session = Session()
-    guild = session.query(Guild).filter(Guild.guild_id == arg_guild_id).first()
+    guild = session.query(Guild).filter(Guild.guild_id == arg_guild.id).first()
 
     # Fetch top 10 users for the 4 attributes; messages/acitivity/karma/tokens
     top_messages, top_activity, top_karma, top_tokens = [], [], [], []
     # Fetch top messages_sent
     temp_list = sorted(guild.users, key=lambda x: x.messages_sent, reverse=True)[:10]
     for x in temp_list:
+        guild_user = arg_guild.get_member(int(x.user_id))
         dbuser = services.AttrDict()
-        dbuser.update({"name": x.name, "messages_sent": x.messages_sent})
+        dbuser.update({"name": str(guild_user.display_name), "messages_sent": x.messages_sent})
         top_messages.append(dbuser)
     # Fetch top activity points
     temp_list = sorted(guild.users, key=lambda x: x.activity_points, reverse=True)[:10]
     for x in temp_list:
+        guild_user = arg_guild.get_member(int(x.user_id))
         dbuser = services.AttrDict()
-        dbuser.update({"name": x.name, "activity_points": x.activity_points})
+        dbuser.update({"name": str(guild_user.display_name), "activity_points": x.activity_points})
         top_activity.append(dbuser)
     # Fetch top karma
     temp_list = sorted(guild.users, key=lambda x: x.karma, reverse=True)[:10]
     for x in temp_list:
+        guild_user = arg_guild.get_member(int(x.user_id))
         dbuser = services.AttrDict()
-        dbuser.update({"name": x.name, "karma": x.karma})
+        dbuser.update({"name": str(guild_user.display_name), "karma": x.karma})
         top_karma.append(dbuser)
     # Fetch top karma
     temp_list = sorted(guild.users, key=lambda x: x.tokens, reverse=True)[:10]
     for x in temp_list:
+        guild_user = arg_guild.get_member(int(x.user_id))
         dbuser = services.AttrDict()
-        dbuser.update({"name": x.name, "tokens": x.tokens})
+        dbuser.update({"name": str(guild_user.display_name), "tokens": x.tokens})
         top_tokens.append(dbuser)
     dbresults = services.AttrDict()
     dbresults.update({"top_messages": top_messages, "top_activity": top_activity,
