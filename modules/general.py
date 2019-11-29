@@ -5,6 +5,7 @@ from support.services import Search
 from support import services
 from database import dbfunctions
 import math
+import random
 
 
 class General(commands.Cog):
@@ -132,38 +133,37 @@ class General(commands.Cog):
         embed = discord.Embed(colour=self.client.user.color, timestamp=ctx.message.created_at, title="*Questions?*",
                               url=cfg.embed_url)
         embed.set_footer(text=cfg.embed_footer, icon_url=self.client.user.avatar_url)
-        top_results = dbfunctions.retrieve_top_users(ctx.guild)
+
         # Check if lbtype matches any, else post default leaderboard
+
+        # Fetch top ten users based on messages
         if lbtype == "messages":
-            embed.add_field(name="Leaderboard", value="\n".join(
-                [str(count) + ". " + x.name for count, x in enumerate(top_results.top_messages, start=1)]), inline=True)
-            embed.add_field(name=":e_mail: messages sent",
-                            value="\n".join([str(x.messages_sent) for x in top_results.top_messages]), inline=True)
-
+            header, results = dbfunctions.retrieve_top_messages(ctx.guild)
         elif lbtype == "activity":
-            embed.add_field(name="Leaderboard", value="\n".join(
-                [str(count) + ". " + x.name for count, x in enumerate(top_results.top_activity, start=1)]), inline=True)
-            embed.add_field(name=":speaking_head: activity",
-                            value="\n".join([str(x.activity_points) for x in top_results.top_activity]), inline=True)
-
+            header, results = dbfunctions.retrieve_top_activity(ctx.guild)
         elif lbtype == "karma":
-            embed.add_field(name="Leaderboard", value="\n".join(
-                [str(count) + ". " + x.name for count, x in enumerate(top_results.top_karma, start=1)]), inline=True)
-            embed.add_field(name=":angel: karma",
-                            value="\n".join([str(x.karma) for x in top_results.top_karma]), inline=True)
-
+            header, results = dbfunctions.retrieve_top_karma(ctx.guild)
         elif lbtype == "tokens":
-            embed.add_field(name="Leaderboard", value="\n".join(
-                [str(count) + ". " + x.name for count, x in enumerate(top_results.top_tokens, start=1)]), inline=True)
-            embed.add_field(name=":moneybag: tokens",
-                            value="\n".join([str(x.tokens) for x in top_results.top_tokens]), inline=True)
-        # No leaderboard type was given, ergo this was used
+            header, results = dbfunctions.retrieve_top_tokens(ctx.guild)
+        # No type, or invalid type, was given. Return embed with instructions
         else:
             embed.add_field(name="Leaderboard usage", value=".leaderboard messages\n"
                                                             ".leaderboard activity\n"
                                                             ".leaderboard karma\n"
                                                             ".leaderboard tokens")
+            await ctx.send(embed=embed)
+            return
+
+        # Setup of actual embed text
+        results = services.top_users_formatter(results)
+        embed.add_field(name="Leaderboard - " + header, value="\n".join(
+            [str(count) + ". " + x for count, x in enumerate(results, start=1)]), inline=True)
         await ctx.send(embed=embed)
+
+    @commands.command()
+    async def roll(self, ctx, max=100):
+        roll = random.randrange(0, max)
+        await ctx.send(f"{ctx.author} rolled: {roll}")
 
 
 def get_ordinal(number):

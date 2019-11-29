@@ -145,3 +145,18 @@ def authority_check(arg_target_user, arg_user):
         return True
     else:
         return False
+
+
+# Makes it so the top users are displayed properly (shortening of names and stuff)
+def top_users_formatter(arg_list):
+    new_list = []
+    username_max_length = 20
+    for x in arg_list:
+        y = x.user
+        if len(y) > username_max_length:
+            y = y[:username_max_length]
+        while len(y) < username_max_length:
+            y += "."
+        y += "....." + str(x.value)
+        new_list.append(y)
+    return new_list

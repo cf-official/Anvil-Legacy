@@ -271,47 +271,120 @@ def remove_role(arg_guild_id, arg_role):
     return True
 
 
-# Retrieve all top 10 users per stat from guild
-def retrieve_top_users(arg_guild):
+# Retrieve the top 10 users with most messages from guild
+def retrieve_top_messages(arg_guild):
     session = Session()
     guild = session.query(Guild).filter(Guild.guild_id == arg_guild.id).first()
 
-    # Fetch top 10 users for the 4 attributes; messages/acitivity/karma/tokens
-    top_messages, top_activity, top_karma, top_tokens = [], [], [], []
+    header = ":e_mail: messages sent"
+    top_list = []
+    i = 0
     # Fetch top messages_sent
-    temp_list = sorted(guild.users, key=lambda x: x.messages_sent, reverse=True)[:10]
-    for x in temp_list:
-        guild_user = arg_guild.get_member(int(x.user_id))
+    temp_list = sorted(guild.users, key=lambda x: x.messages_sent, reverse=True)
+    while len(top_list) < 10:
+        temp_user = temp_list[i]
+        guild_user = arg_guild.get_member(int(temp_user.user_id))
+        i += 1
+
+        # If user currently no longer in guild, skip said person.
+        if guild_user is None:
+            continue
+
+        # Create dict object to store user data in.
         dbuser = services.AttrDict()
-        dbuser.update({"name": str(guild_user.display_name), "messages_sent": x.messages_sent})
-        top_messages.append(dbuser)
-    # Fetch top activity points
-    temp_list = sorted(guild.users, key=lambda x: x.activity_points, reverse=True)[:10]
-    for x in temp_list:
-        guild_user = arg_guild.get_member(int(x.user_id))
-        dbuser = services.AttrDict()
-        dbuser.update({"name": str(guild_user.display_name), "activity_points": x.activity_points})
-        top_activity.append(dbuser)
-    # Fetch top karma
-    temp_list = sorted(guild.users, key=lambda x: x.karma, reverse=True)[:10]
-    for x in temp_list:
-        guild_user = arg_guild.get_member(int(x.user_id))
-        dbuser = services.AttrDict()
-        dbuser.update({"name": str(guild_user.display_name), "karma": x.karma})
-        top_karma.append(dbuser)
-    # Fetch top karma
-    temp_list = sorted(guild.users, key=lambda x: x.tokens, reverse=True)[:10]
-    for x in temp_list:
-        guild_user = arg_guild.get_member(int(x.user_id))
-        dbuser = services.AttrDict()
-        dbuser.update({"name": str(guild_user.display_name), "tokens": x.tokens})
-        top_tokens.append(dbuser)
-    dbresults = services.AttrDict()
-    dbresults.update({"top_messages": top_messages, "top_activity": top_activity,
-                      "top_karma": top_karma, "top_tokens": top_tokens})
+        dbuser.update({"user": str(guild_user.display_name), "value": temp_user.messages_sent})
+        top_list.append(dbuser)
+
     session.commit()
     session.close()
-    return dbresults
+    return header, top_list
+
+
+# Retrieve the top 10 users with highest activity from guild
+def retrieve_top_activity(arg_guild):
+    session = Session()
+    guild = session.query(Guild).filter(Guild.guild_id == arg_guild.id).first()
+
+    header = ":speaking_head: activity"
+    top_list = []
+    i = 0
+    # Fetch top messages_sent
+    temp_list = sorted(guild.users, key=lambda x: x.activity_points, reverse=True)
+    while len(top_list) < 10:
+        temp_user = temp_list[i]
+        guild_user = arg_guild.get_member(int(temp_user.user_id))
+        i += 1
+
+        # If user currently no longer in guild, skip said person.
+        if guild_user is None:
+            continue
+
+        # Create dict object to store user data in.
+        dbuser = services.AttrDict()
+        dbuser.update({"user": str(guild_user.display_name), "value": temp_user.activity_points})
+        top_list.append(dbuser)
+
+    session.commit()
+    session.close()
+    return header, top_list
+
+
+# Retrieve the top 10 users with highest karma from guild
+def retrieve_top_karma(arg_guild):
+    session = Session()
+    guild = session.query(Guild).filter(Guild.guild_id == arg_guild.id).first()
+
+    header = ":angel: karma"
+    top_list = []
+    i = 0
+    # Fetch top messages_sent
+    temp_list = sorted(guild.users, key=lambda x: x.karma, reverse=True)
+    while len(top_list) < 10:
+        temp_user = temp_list[i]
+        guild_user = arg_guild.get_member(int(temp_user.user_id))
+        i += 1
+
+        # If user currently no longer in guild, skip said person.
+        if guild_user is None:
+            continue
+
+        # Create dict object to store user data in.
+        dbuser = services.AttrDict()
+        dbuser.update({"user": str(guild_user.display_name), "value": temp_user.karma})
+        top_list.append(dbuser)
+
+    session.commit()
+    session.close()
+    return header, top_list
+
+
+# Retrieve the top 10 users with most tokens from guild
+def retrieve_top_tokens(arg_guild):
+    session = Session()
+    guild = session.query(Guild).filter(Guild.guild_id == arg_guild.id).first()
+
+    header = ":moneybag: tokens"
+    top_list = []
+    i = 0
+    # Fetch top messages_sent
+    temp_list = sorted(guild.users, key=lambda x: x.tokens, reverse=True)
+    while len(top_list) < 10:
+        temp_user = temp_list[i]
+        guild_user = arg_guild.get_member(int(temp_user.user_id))
+        i += 1
+
+        # If user currently no longer in guild, skip said person.
+        if guild_user is None:
+            continue
+
+        # Create dict object to store user data in.
+        dbuser = services.AttrDict()
+        dbuser.update({"user": str(guild_user.display_name), "value": temp_user.tokens})
+        top_list.append(dbuser)
+
+    session.commit()
+    session.close()
+    return header, top_list
 
 
 # Add channels to the set of channels where bot commands are allowed
