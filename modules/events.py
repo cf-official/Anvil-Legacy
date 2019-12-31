@@ -1,5 +1,5 @@
 import discord
-from discord.ext import commands
+from discord.ext import commands, tasks
 from support import services
 from database import dbfunctions
 from codeforge import cfevents
@@ -10,6 +10,17 @@ logger = log.Logger
 class Events(commands.Cog):
     def __init__(self, client):
         self.client = client
+        self.status_list_index = 0
+        self.status_list = ["大家好！", "सभी को नमस्कार!", "Hallo allemaal!", "Hello Everyone!", "Hallo zusammen!",
+                            "みなさん、こんにちは！", "Bonjour à tous", "¡Hola a todos!"]
+
+    # BG Task for looping status' happens here
+    # Add fetching status list from DB later on
+    # Add actual looping through list later on
+    @tasks.loop(seconds=30)
+    async def update_status(self):
+        await self.client.change_presence(activity=discord.Game(self.status_list[self.status_list_index]))
+        self.status_list_index = self.status_list_index + 1 if self.status_list_index < len(self.status_list) - 1 else 0
 
     # Ready notifications
     @commands.Cog.listener()
@@ -27,7 +38,7 @@ class Events(commands.Cog):
             dbfunctions.guild_add(guild)
             dbfunctions.guild_add_users(guild)
         logger.log(logger.INFO, "====================================")
-        await self.client.change_presence(status=discord.Status.idle, activity=discord.Game('大家好！'))
+        self.update_status.start()
 
     # Guild interactions
     @commands.Cog.listener()
