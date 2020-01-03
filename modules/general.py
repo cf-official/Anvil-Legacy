@@ -83,14 +83,17 @@ class General(commands.Cog):
         embed.set_footer(text=cfg.embed_footer, icon_url=self.client.user.avatar_url)
 
         # Set fields
-        embed.add_field(name=f"Members ({len(members_total)}): ", value=f"<:greendot:617798086403686432>{members_online} - <:reddot:617798085938118730>{members_offline} - 🤖 {members_bots}")
-        embed.add_field(name="Created at:", value=ctx.guild.created_at.strftime("%a, %#d %B %Y, %I:%M %p UTC"))
+        embed.add_field(name=f"Members ({len(members_total)}): ",
+                        value=f"<:greendot:617798086403686432>{members_online} - <:reddot:617798085938118730>{members_offline} - 🤖 {members_bots}",
+                        inline=True)
+        embed.add_field(name="Created at:", value=ctx.guild.created_at.strftime("%a, %#d %B %Y, %I:%M %p UTC"),
+                        inline=True)
 
         # Make sure roles are listed correctly, even if empty
         if roles:
-            embed.add_field(name=f"Roles ({len(roles)}):", value=" ".join([role.mention for role in roles]))
+            embed.add_field(name=f"Roles ({len(roles)}):", value=" ".join([role.mention for role in roles]), inline=False)
         else:
-            embed.add_field(name="Roles (0):", value="None")
+            embed.add_field(name="Roles (0):", value="None", inline=False)
 
         # Show nitro boosters
         if not boosters:

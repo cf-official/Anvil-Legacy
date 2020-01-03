@@ -2,6 +2,7 @@
 from database import dbfunctions
 from datetime import datetime
 from support import config as cfg
+import random
 import operator
 import time
 import re
@@ -160,3 +161,17 @@ def top_users_formatter(arg_list):
         y += "....." + str(x.value)
         new_list.append(y)
     return new_list
+
+
+# Calculate odds based on given max_odd, then attempt to win at those odds. Return True/False = Win/Loss
+def attempt_chance(max_range, winning_range):
+    roll = random.randrange(1, max_range+1)
+    result = True if roll <= winning_range else False
+    return result, roll
+
+
+# React to a given message with a number, using numerical emoji...
+async def numerical_reaction(message, number):
+    numerical_emoji_list = ["0️⃣", "1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣", "6️⃣", "7️⃣", "8️⃣", "9️⃣"]
+    for x in str(number):
+        await message.add_reaction(numerical_emoji_list[int(x)])

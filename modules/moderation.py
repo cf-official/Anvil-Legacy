@@ -13,7 +13,11 @@ class Moderation(commands.Cog):
 
     # Make sure the moderator knows it worked!
     async def cog_after_invoke(self, ctx):
-        await ctx.message.add_reaction(cfg.feedback_success_emoji_id)
+        try:
+            await ctx.message.add_reaction(cfg.feedback_success_emoji_id)
+        except Exception as e:
+            # Only arrives here if message can't be found, i.e., using purge command.
+            pass
 
     # Kick a user
     @commands.command()
