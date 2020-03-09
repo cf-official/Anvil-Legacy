@@ -1,4 +1,6 @@
 from discord.ext import commands
+from database import dbfunctions
+from support import services
 import random
 import math
 
@@ -31,10 +33,7 @@ class Entertainment(commands.Cog):
                         'My sources say no',
                         'Outlook isn\'t very good',
                         'Very doubtful']
-<<<<<<< Updated upstream
-        await ctx.send(f'Q: {question}\n'
-                       f'A: {random.choice(responses)}')
-=======
+
         message = f'Q: {question}\nA: {random.choice(responses)}'
         await services.send_simple_embed(ctx, self.client.user, message)
 
@@ -74,7 +73,6 @@ class Entertainment(commands.Cog):
         # Update tokens and send user feedback
         dbfunctions.update_user_tokens(ctx.guild, ctx.author, amount)
         await services.send_simple_embed(ctx, self.client.user, result_text)
->>>>>>> Stashed changes
 
 
 def setup(client):

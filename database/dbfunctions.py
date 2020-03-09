@@ -189,7 +189,7 @@ def set_karma_event(arg_channel, arg_user_giving, arg_user_receiving, arg_guild_
 
 
 # Fetch user from db and return all data that belongs to user
-def retrieve_user(arg_user):
+def get_user(arg_user):
     session = Session()
     guild = session.query(Guild).filter(Guild.guild_id == arg_user.guild.id).first()
     user = next((x for x in guild.users if int(x.user_id) == int(arg_user.id)), None)
