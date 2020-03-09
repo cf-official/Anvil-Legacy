@@ -165,7 +165,7 @@ def top_users_formatter(arg_list):
 
 # Calculate odds based on given max_odd, then attempt to win at those odds. Return True/False = Win/Loss
 def attempt_chance(max_range, winning_range, min_range=1, seed_bytes=128):
-    random.seed(os.urandom(seed_bytes))
+    # random.seed(os.urandom(seed_bytes))
     roll = random.randrange(min_range, max_range+1)
     result = True if roll <= winning_range else False
     return result, roll
