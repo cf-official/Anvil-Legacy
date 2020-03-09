@@ -50,26 +50,33 @@ class Listener(commands.Cog):
     @commands.Cog.listener()
     async def on_message(self, message):
         user = message.author
+
         # Make sure message wasn't sent through DM
         if not hasattr(user, 'guild'): return
+
         # Make sure user is not a bot and user is not None
         if user.bot is False and user is not None:
             await services.set_user_auto_roles(user, user.guild)
+
             # Increment message count
             dbfunctions.update_user_messages(user.guild, user, 1)
+
             # Check if last message sent was longer than a minute ago
             if dbfunctions.check_user_last_message(user, user.guild.id):
                 # Add to activity score
                 dbfunctions.update_user_activity(user.guild, user, 1)
+
             # Check if the message was sent in CodeForge
             if cfevents.check_cf_guild(message.guild.id):
                 # Passthrough to the CodeForge specefic message handler???
                 await cfevents.cf_on_message_create(message)
+
             # Calculate odds to award coins
-            if services.attempt_chance(100, 6)[0]:
+            if services.attempt_chance(100, 5)[0]:
                 # Decide how many coins, and apply coin reward
-                result, roll = services.attempt_chance(10, 10)
+                result, roll = services.attempt_chance(30, 30, 10)
                 dbfunctions.update_user_tokens(user.guild, user, roll)
+
                 # Attempt to add reactions to showcase token gain
                 try:
                     await message.add_reaction("💲")
