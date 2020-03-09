@@ -63,11 +63,9 @@ class Entertainment(commands.Cog):
         # Do the gamble and format user feedback
         roll = services.attempt_chance(1, 100, 45)
         if roll[0]:
-            result_text = f"{ctx.author} won {amount} tokens.\n" \
-                          f"(Currently owns {user_tokens+amount})."
+            result_text = f"{ctx.author} won {amount} tokens and now has {user_tokens + amount}."
         else:
-            result_text = f"{ctx.author} lost {amount} tokens.\n" \
-                          f"(Currently owns {user_tokens-amount})."
+            result_text = f"{ctx.author} lost {amount} tokens and now has {user_tokens - amount}."
             amount = amount * -1
 
         # Update tokens and send user feedback
