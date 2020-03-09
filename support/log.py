@@ -38,10 +38,11 @@ class Logger(Enum):
             # Split the content at the 10th character and square brace
             source = "[" + source[0:11] + '...]'
         else:
-            source = "[" + source + ']' # square brace the content
+            # Square brace the content
+            source = "[" + source + ']'
         spacer = ""
+        # Align logs properly by adding spaces
         while (len(spacer)+len(source)) < 19:
-            # Add a single space to the spacer to allow the logs full alignment
             spacer += " "
         return "\x1b[1;35m"+source+"\x1b[0m"+spacer
 

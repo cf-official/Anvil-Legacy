@@ -164,14 +164,49 @@ def top_users_formatter(arg_list):
 
 
 # Calculate odds based on given max_odd, then attempt to win at those odds. Return True/False = Win/Loss
+<<<<<<< Updated upstream
 def attempt_chance(max_range, winning_range):
     roll = random.randrange(1, max_range+1)
+=======
+def attempt_chance(min_range, max_range, winning_range):
+    roll = random.randrange(min_range, max_range+1)
+>>>>>>> Stashed changes
     result = True if roll <= winning_range else False
     return result, roll
 
 
 # React to a given message with a number, using numerical emoji...
 async def numerical_reaction(message, number):
+<<<<<<< Updated upstream
     numerical_emoji_list = ["0️⃣", "1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣", "6️⃣", "7️⃣", "8️⃣", "9️⃣"]
     for x in str(number):
         await message.add_reaction(numerical_emoji_list[int(x)])
+=======
+    try:
+        await message.add_reaction("💲")
+        numerical_emoji_list = ["0️⃣", "1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣", "6️⃣", "7️⃣", "8️⃣", "9️⃣"]
+        for x in str(number):
+            await message.add_reaction(numerical_emoji_list[int(x)])
+    except Exception as e:
+        logger.log(logger.VERBOSE, e, message.author.guild)
+
+
+# Adds a 'failed' emoji to a message
+async def failed_command_react(message):
+    await message.add_reaction(cfg.feedback_error_emoji_id)
+
+
+# Send a simple embed
+async def send_simple_embed(ctx, user, text):
+    embed = discord.Embed(colour=user.color, title=text)
+    await ctx.send(embed=embed)
+
+
+# Check if given input (perhaps a string), is a number
+def is_int(variable):
+    try:
+        int(variable)
+        return True
+    except ValueError:
+        return False
+>>>>>>> Stashed changes
