@@ -4,6 +4,7 @@ from support import config as cfg
 from support.services import Search
 from support import services
 from database import dbfunctions
+from support import UIdrawer
 import math
 import random
 
@@ -19,7 +20,9 @@ class General(commands.Cog):
 
     @commands.command(aliases=['uinfo', 'ui'])
     async def userinfo(self, ctx, *, user=None):
-
+        # wait UIdrawer.request_ui_card()
+        # await ctx.send(file=discord.File('support/uicard.png'))
+        
         # Fetch relevant user and accompanying roles
         user = Search.search_user(ctx, user)
         roles = [role for role in user.roles]
@@ -52,7 +55,7 @@ class General(commands.Cog):
         embed.add_field(name="Bot?", value=user.bot, inline=True)
 
         if not user.bot:
-            dbuser = dbfunctions.retrieve_user(user)
+            dbuser = dbfunctions.get_user(user)
             embed.add_field(name="User involvement", value=":e_mail: Messages sent: " + str(
                 dbuser.messages_sent) + " :speaking_head: Activity: " + str(dbuser.activity_points), inline=False)
             embed.add_field(name="User stats", value=":angel: Karma: " + str(dbuser.karma) +
