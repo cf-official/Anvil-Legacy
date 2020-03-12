@@ -280,7 +280,7 @@ def retrieve_top_messages(arg_guild):
     top_list = []
     i = 0
     # Fetch top messages_sent
-    temp_list = sorted(guild.users, key=lambda x: x.tokens, reverse=True)
+    temp_list = sorted(guild.users, key=lambda x: x.messages_sent, reverse=True)
     for index, user in enumerate(temp_list):
         guild_user = arg_guild.get_member(int(user.user_id))
 
@@ -310,7 +310,7 @@ def retrieve_top_activity(arg_guild):
     top_list = []
     i = 0
     # Fetch top messages_sent
-    temp_list = sorted(guild.users, key=lambda x: x.tokens, reverse=True)
+    temp_list = sorted(guild.users, key=lambda x: x.activity_points, reverse=True)
     for index, user in enumerate(temp_list):
         guild_user = arg_guild.get_member(int(user.user_id))
 
@@ -340,7 +340,7 @@ def retrieve_top_karma(arg_guild):
     top_list = []
     i = 0
     # Fetch top messages_sent
-    temp_list = sorted(guild.users, key=lambda x: x.tokens, reverse=True)
+    temp_list = sorted(guild.users, key=lambda x: x.karma, reverse=True)
     for index, user in enumerate(temp_list):
         guild_user = arg_guild.get_member(int(user.user_id))
 
