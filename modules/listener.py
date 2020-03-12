@@ -85,7 +85,7 @@ class Listener(commands.Cog):
         try:
             message = await channel.fetch_message(payload.message_id)
         except Exception as e:
-            # Couldn't fetch the message, probably because it was removed by another bot (looking at you sigma)
+            # Message most likely not available
             return
         if message.author is user or message.author.bot: return
 

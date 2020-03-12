@@ -13,7 +13,6 @@ class General(commands.Cog):
     def __init__(self, client):
         self.client = client
 
-    # Commands
     @commands.command()
     async def ping(self, ctx):
         await ctx.send(f'Pong! ({round(self.client.latency * 1000)}ms)')

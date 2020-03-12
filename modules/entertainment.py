@@ -61,12 +61,10 @@ class Entertainment(commands.Cog):
         if 0 >= amount or amount > user_tokens: raise Exception("Faulty token amount")
 
         # Do the gamble and format user feedback
-        roll = services.attempt_chance(1, 100, 45)
-        if roll[0]:
-            result_text = f"{ctx.author} won {amount} tokens and now has {user_tokens + amount}."
-        else:
-            result_text = f"{ctx.author} lost {amount} tokens and now has {user_tokens - amount}."
-            amount = amount * -1
+        roll = services.attempt_chance(1, 100, 49)
+        result = "won" if roll[0] else "lost"
+        if not roll[0]: amount = amount * -1
+        result_text = f"{ctx.author} {result} {amount} tokens and now has {user_tokens + amount}."
 
         # Update tokens and send user feedback
         dbfunctions.update_user_tokens(ctx.guild, ctx.author, amount)

@@ -280,11 +280,9 @@ def retrieve_top_messages(arg_guild):
     top_list = []
     i = 0
     # Fetch top messages_sent
-    temp_list = sorted(guild.users, key=lambda x: x.messages_sent, reverse=True)
-    while len(top_list) < 10:
-        temp_user = temp_list[i]
-        guild_user = arg_guild.get_member(int(temp_user.user_id))
-        i += 1
+    temp_list = sorted(guild.users, key=lambda x: x.tokens, reverse=True)
+    for index, user in enumerate(temp_list):
+        guild_user = arg_guild.get_member(int(user.user_id))
 
         # If user currently no longer in guild, skip said person.
         if guild_user is None:
@@ -292,8 +290,11 @@ def retrieve_top_messages(arg_guild):
 
         # Create dict object to store user data in.
         dbuser = services.AttrDict()
-        dbuser.update({"user": str(guild_user.display_name), "value": temp_user.messages_sent})
+        dbuser.update({"user": str(guild_user.display_name), "value": user.messages_sent})
         top_list.append(dbuser)
+
+        # maximum of 10 entries tyvm
+        if len(top_list) is 10: break
 
     session.commit()
     session.close()
@@ -309,11 +310,9 @@ def retrieve_top_activity(arg_guild):
     top_list = []
     i = 0
     # Fetch top messages_sent
-    temp_list = sorted(guild.users, key=lambda x: x.activity_points, reverse=True)
-    while len(top_list) < 10:
-        temp_user = temp_list[i]
-        guild_user = arg_guild.get_member(int(temp_user.user_id))
-        i += 1
+    temp_list = sorted(guild.users, key=lambda x: x.tokens, reverse=True)
+    for index, user in enumerate(temp_list):
+        guild_user = arg_guild.get_member(int(user.user_id))
 
         # If user currently no longer in guild, skip said person.
         if guild_user is None:
@@ -321,8 +320,11 @@ def retrieve_top_activity(arg_guild):
 
         # Create dict object to store user data in.
         dbuser = services.AttrDict()
-        dbuser.update({"user": str(guild_user.display_name), "value": temp_user.activity_points})
+        dbuser.update({"user": str(guild_user.display_name), "value": user.activity_points})
         top_list.append(dbuser)
+
+        # maximum of 10 entries tyvm
+        if len(top_list) is 10: break
 
     session.commit()
     session.close()
@@ -338,11 +340,9 @@ def retrieve_top_karma(arg_guild):
     top_list = []
     i = 0
     # Fetch top messages_sent
-    temp_list = sorted(guild.users, key=lambda x: x.karma, reverse=True)
-    while len(top_list) < 10:
-        temp_user = temp_list[i]
-        guild_user = arg_guild.get_member(int(temp_user.user_id))
-        i += 1
+    temp_list = sorted(guild.users, key=lambda x: x.tokens, reverse=True)
+    for index, user in enumerate(temp_list):
+        guild_user = arg_guild.get_member(int(user.user_id))
 
         # If user currently no longer in guild, skip said person.
         if guild_user is None:
@@ -350,8 +350,11 @@ def retrieve_top_karma(arg_guild):
 
         # Create dict object to store user data in.
         dbuser = services.AttrDict()
-        dbuser.update({"user": str(guild_user.display_name), "value": temp_user.karma})
+        dbuser.update({"user": str(guild_user.display_name), "value": user.karma})
         top_list.append(dbuser)
+
+        # maximum of 10 entries tyvm
+        if len(top_list) is 10: break
 
     session.commit()
     session.close()
@@ -365,13 +368,11 @@ def retrieve_top_tokens(arg_guild):
 
     header = ":moneybag: tokens"
     top_list = []
-    i = 0
-    # Fetch top messages_sent
+
+    # Fetch top tokens
     temp_list = sorted(guild.users, key=lambda x: x.tokens, reverse=True)
-    while len(top_list) < 10:
-        temp_user = temp_list[i]
-        guild_user = arg_guild.get_member(int(temp_user.user_id))
-        i += 1
+    for index, user in enumerate(temp_list):
+        guild_user = arg_guild.get_member(int(user.user_id))
 
         # If user currently no longer in guild, skip said person.
         if guild_user is None:
@@ -379,8 +380,11 @@ def retrieve_top_tokens(arg_guild):
 
         # Create dict object to store user data in.
         dbuser = services.AttrDict()
-        dbuser.update({"user": str(guild_user.display_name), "value": temp_user.tokens})
+        dbuser.update({"user": str(guild_user.display_name), "value": user.tokens})
         top_list.append(dbuser)
+
+        # maximum of 10 entries tyvm
+        if len(top_list) is 10: break
 
     session.commit()
     session.close()

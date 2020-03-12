@@ -52,7 +52,7 @@ class Moderation(commands.Cog):
                 await ctx.guild.unban(user)
                 return
 
-    @commands.command()
+    @commands.command(alias="nuke")
     @commands.has_permissions(manage_messages=True)
     async def purge(self, ctx, amount=5):
         await ctx.channel.purge(limit=amount)
