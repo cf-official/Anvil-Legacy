@@ -34,7 +34,7 @@ class General(commands.Cog):
         # Create embed
         embed = discord.Embed(colour=user.color, timestamp=ctx.message.created_at, title="*Questions?*", url=cfg.embed_url)
         # Set embed fields and values
-        embed.set_author(name=f"{user}")
+        embed.set_author(name=f"{user}-chan")
         embed.set_thumbnail(url=user.avatar_url)
         embed.set_footer(text=cfg.embed_footer, icon_url=self.client.user.avatar_url)
 
