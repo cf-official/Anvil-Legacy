@@ -8,7 +8,7 @@ from sqlalchemy import asc, desc
 from support import services
 from datetime import datetime
 from support import services
-
+from support import config as cfg
 
 # Guild updates
 def guild_add(arg_guild):
@@ -19,7 +19,7 @@ def guild_add(arg_guild):
         new_guild = Guild(arg_guild.name, arg_guild.id)
         session.add(new_guild)
     # If guild still attached (Matched against bot id)
-    elif sum(int(x.id) == 607163424362856458 for x in arg_guild.members) is 1:
+    elif sum(int(x.id) == cfg.bot_id for x in arg_guild.members) is 1:
         guild = session.query(Guild).filter(Guild.guild_id == arg_guild.id).first()
         guild.attached = True
     # If guild left while bot offline
