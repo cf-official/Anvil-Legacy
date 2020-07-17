@@ -21,7 +21,7 @@ class General(commands.Cog):
     async def userinfo(self, ctx, *, user=None):
         # wait UIdrawer.request_ui_card()
         # await ctx.send(file=discord.File('support/uicard.png'))
-        
+
         # Fetch relevant user and accompanying roles
         user = Search.search_user(ctx, user)
         roles = [role for role in user.roles]
@@ -32,7 +32,8 @@ class General(commands.Cog):
         ordinal = get_ordinal(position)
 
         # Create embed
-        embed = discord.Embed(colour=user.color, timestamp=ctx.message.created_at, title="*Questions?*", url=cfg.embed_url)
+        embed = discord.Embed(colour=user.color, timestamp=ctx.message.created_at, title="*Questions?*",
+                              url=cfg.embed_url)
         # Set embed fields and values
         embed.set_author(name=f"{user}")
         embed.set_thumbnail(url=user.avatar_url)
@@ -40,13 +41,16 @@ class General(commands.Cog):
 
         embed.add_field(name="-",
                         value="**ID:** " + str(user.id) + "\n"
-                              "**Created at:** " + user.created_at.strftime("%a, %#d %B %Y, %I:%M %p UTC") + "\n"
-                              "**Joined at:** " + user.joined_at.strftime("%a, %#d %B %Y, %I:%M %p UTC") + "\n"
-                              f"**{ordinal} member of {ctx.guild}.**", inline=False)
+                                                          "**Created at:** " + user.created_at.strftime(
+                            "%a, %#d %B %Y, %I:%M %p UTC") + "\n"
+                                                             "**Joined at:** " + user.joined_at.strftime(
+                            "%a, %#d %B %Y, %I:%M %p UTC") + "\n"
+                                                             f"**{ordinal} member of {ctx.guild}.**", inline=False)
 
         # Make sure roles are listed correctly, even if empty
         if roles:
-            embed.add_field(name=f"Roles ({len(roles)}):", value=" ".join([role.mention for role in roles]), inline=False)
+            embed.add_field(name=f"Roles ({len(roles)}):", value=" ".join([role.mention for role in roles]),
+                            inline=False)
             embed.add_field(name="Top role:", value=user.top_role.mention, inline=True)
         else:
             embed.add_field(name="Roles (0):", value="None")
@@ -73,7 +77,8 @@ class General(commands.Cog):
         boosters.reverse()
         members_total = ctx.guild.members
         members_bots = sum(1 for member in members_total if member.bot is True)
-        members_online = sum(1 for member in members_total if member.bot is False and member.status is not discord.Status.offline)
+        members_online = sum(
+            1 for member in members_total if member.bot is False and member.status is not discord.Status.offline)
         members_offline = len(members_total) - members_bots - members_online
 
         # Create embed
@@ -93,7 +98,8 @@ class General(commands.Cog):
 
         # Make sure roles are listed correctly, even if empty
         if roles:
-            embed.add_field(name=f"Roles ({len(roles)}):", value=" ".join([role.mention for role in roles]), inline=False)
+            embed.add_field(name=f"Roles ({len(roles)}):", value=" ".join([role.mention for role in roles]),
+                            inline=False)
         else:
             embed.add_field(name="Roles (0):", value="None", inline=False)
 
@@ -101,7 +107,8 @@ class General(commands.Cog):
         if not boosters:
             embed.add_field(name=f"Nitro boosters (0): ", value="None ")
         else:
-            embed.add_field(name=f"Nitro boosters ({len(boosters)}): ", value=" ".join([booster.mention for booster in boosters]))
+            embed.add_field(name=f"Nitro boosters ({len(boosters)}): ",
+                            value=" ".join([booster.mention for booster in boosters]))
         await ctx.send(embed=embed)
 
     @commands.command()

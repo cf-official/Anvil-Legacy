@@ -2,6 +2,7 @@ from support import config as cfg
 from codeforge import cfconfig as cfcfg
 from discord.ext import commands
 from support import log
+
 logger = log.Logger
 
 
@@ -26,14 +27,14 @@ async def cf_on_member_join(member):
 
 
 # Message handler specifically for integrating with CodeForge only features
-# such as the present yourself lockdown feature.
+# such as the present yourself lockout feature.
 async def cf_on_message_create(message):
     # Check if CF
     cf = message.guild
     if not check_cf_guild(cf.id): return
     # Check if channel matches the stored id for #present-yourself
     if message.channel.id == cfcfg.present_channel_id:
-        logger.log(logger.VERBOSE, f"{message.author} introduced themself, role applied", message.guild.name)
+        logger.log(logger.VERBOSE, f"{message.author} has introduced themselves, role applied", message.guild.name)
         member = cf.get_member(message.author.id)
         bot_role = cf.get_role(cfcfg.present_channel_role_id)
         await member.add_roles(bot_role[0])
