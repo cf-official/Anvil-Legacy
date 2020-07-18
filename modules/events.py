@@ -4,6 +4,7 @@ from support import services
 from database import dbfunctions
 from codeforge import cfevents
 from support import log
+
 logger = log.Logger
 
 
@@ -25,36 +26,30 @@ class Events(commands.Cog):
     # Ready notifications
     @commands.Cog.listener()
     async def on_ready(self):
+        logger.log_headers()
+        logger.log_titled_spacer("Information")
         logger.log(logger.INFO, f"Logged in as: {self.client.user.name}")
         logger.log(logger.INFO, f"Bot ID: {self.client.user.id}")
-        logger.log(logger.INFO, "====================================")
-        logger.log(logger.OK, "====================================")
-        logger.log(logger.VERBOSE, "====================================")
-        logger.log(logger.DEBUG, "====================================")
-        logger.log(logger.ERROR, "====================================")
+        logger.log_titled_spacer("Guild Connections")
         for guild in self.client.guilds:
-            logger.log(logger.INFO, f"Connected to {guild}")
+            logger.log(logger.INFO, f"Connected: {guild}")
             # Add guild to db, add all users of said guild to db afterwards (relational)
             dbfunctions.guild_add(guild)
             dbfunctions.guild_add_users(guild)
-        logger.log(logger.INFO, "====================================")
+        logger.log(logger.INFO, f"Connected to {len(self.client.guilds)} Guilds")
         self.update_status.start()
 
     # Guild interactions
     @commands.Cog.listener()
     async def on_guild_join(self, guild):
-        logger.log(logger.INFO, "====================================")
         logger.log(logger.INFO, f"Connected to {guild}")
-        logger.log(logger.INFO, "====================================")
         # Add guild to db, add all users of said guild to db afterwards (relational)
         dbfunctions.guild_add(guild)
         dbfunctions.guild_add_users(guild)
 
     @commands.Cog.listener()
     async def on_guild_remove(self, guild):
-        logger.log(logger.INFO, "====================================")
         logger.log(logger.INFO, f"Disconnected from {guild}")
-        logger.log(logger.INFO, "====================================")
         dbfunctions.guild_remove(guild)
 
     # Member interaction

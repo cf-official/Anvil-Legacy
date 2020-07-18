@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="62ee55e0-0d3f-44b9-8d8c-00ccb4238f78" name="Default Changelist" comment="removed unusable venv">
+      <change afterPath="$PROJECT_DIR$/.idea/discord.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/Anvil.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/Anvil.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/codeforge/cfevents.py" beforeDir="false" afterPath="$PROJECT_DIR$/codeforge/cfevents.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/modules/events.py" beforeDir="false" afterPath="$PROJECT_DIR$/modules/events.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/modules/general.py" beforeDir="false" afterPath="$PROJECT_DIR$/modules/general.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/support/log.py" beforeDir="false" afterPath="$PROJECT_DIR$/support/log.py" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="ROOT_SYNC" value="DONT_SYNC" />
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="PREVIEW_PUSH_ON_COMMIT_AND_PUSH" value="false" />
+  </component>
+  <component name="ProjectId" id="1TuFyWh728FXE0kkBJ92SPUttBs" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../CSVContactsCleaner" />
+    <property name="restartRequiresConfirmation" value="false" />
+    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\User24\Documents\GitHub\Anvil\support" />
+      <recent name="C:\Users\LunarLite\PycharmProjects\Anvil\modules" />
+      <recent name="C:\Users\LunarLite\PycharmProjects\Anvil\support" />
+      <recent name="C:\Users\LunarLite\PycharmProjects\Anvil\database" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\LunarLite\PycharmProjects\Anvil\database" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="main" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="Anvil" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/main.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Python.main" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="62ee55e0-0d3f-44b9-8d8c-00ccb4238f78" name="Default Changelist" comment="" />
+      <created>1567076874115</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1567076874115</updated>
+    </task>
+    <task id="LOCAL-00001" summary="removed unusable venv">
+      <created>1594994914959</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1594994914959</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
+    <servers />
+  </component>
+  <component name="TodoView">
+    <todo-panel id="selected-file">
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+    <todo-panel id="all">
+      <are-packages-shown value="true" />
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+  </component>
+  <component name="UnknownFeatures">
+    <option featureType="com.intellij.fileTypeFactory" implementationName="*.bat" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="oldMeFiltersMigrated" value="true" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="removed unusable venv" />
+    <option name="LAST_COMMIT_MESSAGE" value="removed unusable venv" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="94" y="354" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1594985995388">
+      <screen x="0" y="0" width="2560" height="1392" />
+    </state>
+    <state x="94" y="354" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.2560.1392/-1920.0.1920.1080@0.0.2560.1392" timestamp="1594985995388" />
+    <state x="769" y="266" key="CommitChangelistDialog2" timestamp="1594994971673">
+      <screen x="0" y="0" width="2560" height="1392" />
+    </state>
+    <state x="769" y="266" key="CommitChangelistDialog2/0.0.2560.1392/-1920.0.1920.1080@0.0.2560.1392" timestamp="1594994971673" />
+    <state x="419" y="454" key="FileChooserDialogImpl" timestamp="1594986041929">
+      <screen x="0" y="0" width="2560" height="1392" />
+    </state>
+    <state x="419" y="454" key="FileChooserDialogImpl/0.0.2560.1392/-1920.0.1920.1080@0.0.2560.1392" timestamp="1594986041929" />
+    <state width="1256" height="398" key="GridCell.Tab.0.bottom" timestamp="1594994554350">
+      <screen x="0" y="0" width="2560" height="1392" />
+    </state>
+    <state width="1256" height="398" key="GridCell.Tab.0.bottom/0.0.2560.1392/-1920.0.1920.1080@0.0.2560.1392" timestamp="1594994554350" />
+    <state width="1256" height="398" key="GridCell.Tab.0.center" timestamp="1594994554350">
+      <screen x="0" y="0" width="2560" height="1392" />
+    </state>
+    <state width="1256" height="398" key="GridCell.Tab.0.center/0.0.2560.1392/-1920.0.1920.1080@0.0.2560.1392" timestamp="1594994554350" />
+    <state width="1256" height="398" key="GridCell.Tab.0.left" timestamp="1594994554350">
+      <screen x="0" y="0" width="2560" height="1392" />
+    </state>
+    <state width="1256" height="398" key="GridCell.Tab.0.left/0.0.2560.1392/-1920.0.1920.1080@0.0.2560.1392" timestamp="1594994554350" />
+    <state width="1256" height="398" key="GridCell.Tab.0.right" timestamp="1594994554350">
+      <screen x="0" y="0" width="2560" height="1392" />
+    </state>
+    <state width="1256" height="398" key="GridCell.Tab.0.right/0.0.2560.1392/-1920.0.1920.1080@0.0.2560.1392" timestamp="1594994554350" />
+    <state width="1256" height="487" key="GridCell.Tab.1.bottom" timestamp="1594988646039">
+      <screen x="0" y="0" width="2560" height="1392" />
+    </state>
+    <state width="1256" height="487" key="GridCell.Tab.1.bottom/0.0.2560.1392/-1920.0.1920.1080@0.0.2560.1392" timestamp="1594988646039" />
+    <state width="1256" height="487" key="GridCell.Tab.1.center" timestamp="1594988646039">
+      <screen x="0" y="0" width="2560" height="1392" />
+    </state>
+    <state width="1256" height="487" key="GridCell.Tab.1.center/0.0.2560.1392/-1920.0.1920.1080@0.0.2560.1392" timestamp="1594988646039" />
+    <state width="1256" height="487" key="GridCell.Tab.1.left" timestamp="1594988646039">
+      <screen x="0" y="0" width="2560" height="1392" />
+    </state>
+    <state width="1256" height="487" key="GridCell.Tab.1.left/0.0.2560.1392/-1920.0.1920.1080@0.0.2560.1392" timestamp="1594988646039" />
+    <state width="1256" height="487" key="GridCell.Tab.1.right" timestamp="1594988646039">
+      <screen x="0" y="0" width="2560" height="1392" />
+    </state>
+    <state width="1256" height="487" key="GridCell.Tab.1.right/0.0.2560.1392/-1920.0.1920.1080@0.0.2560.1392" timestamp="1594988646039" />
+    <state x="141" y="344" key="SettingsEditor" timestamp="1594986052735">
+      <screen x="0" y="0" width="2560" height="1392" />
+    </state>
+    <state x="141" y="344" key="SettingsEditor/0.0.2560.1392/-1920.0.1920.1080@0.0.2560.1392" timestamp="1594986052735" />
+  </component>
+</project>
