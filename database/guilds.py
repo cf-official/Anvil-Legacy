@@ -31,13 +31,13 @@ class Guild(Base):
     __tablename__ = 'guilds'
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    name = Column(String)
-    guild_id = Column(String)
+    name = Column(String(100))
+    guild_id = Column(String(20))
     join_date = Column(Date)
-    prefix = Column(String)
+    prefix = Column(String(32))
     attached = Column(Integer)
-    karma_emoji = Column(String)
-    log_channel_id = Column(String)
+    karma_emoji = Column(String(32))
+    log_channel_id = Column(String(20))
 
     users = relationship("User", secondary='guilds_users', cascade="save-update")
     roles = relationship("Role", secondary='guilds_roles', cascade="save-update")

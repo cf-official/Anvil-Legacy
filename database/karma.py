@@ -9,7 +9,7 @@ class KarmaEvents(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
     user_giving_id = Column(Integer)
     user_receiving_id = Column(Integer)
-    channel_id = Column(String)
+    channel_id = Column(String(20))
     datetime = Column(DateTime)
 
     def __init__(self, user_giving_id, user_receiving_id, channel_id):

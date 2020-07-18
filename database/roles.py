@@ -6,7 +6,7 @@ class Role(Base):
     __tablename__ = 'roles'
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    role_id = Column(String)
+    role_id = Column(String(20))
     message_requirement = Column(Integer)
     point_requirement = Column(Integer)
     karma_requirement = Column(Integer)
