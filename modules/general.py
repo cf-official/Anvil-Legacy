@@ -174,13 +174,14 @@ class General(commands.Cog):
     async def karma(self, ctx, user: discord.User=None):
         if user is not None:
             if not user.bot:
+                user = Search.search_user(ctx, user)
                 dbuser = dbfunctions.get_user(user)
-            embed = discord.Embed(colour=user.color,
-                                  url=cfg.embed_url)
-            # Set embed fields and values
-            embed.set_author(name=f"{user}", icon_url=f"{user.avatar_url}")
-            embed.description = f":angel: Karma: {dbuser.karma}"
-            await ctx.send(embed=embed)
+                embed = discord.Embed(colour=user.color,
+                                      url=cfg.embed_url)
+                # Set embed fields and values
+                embed.set_author(name=f"{user}", icon_url=f"{user.avatar_url}")
+                embed.description = f":angel: Karma: {dbuser.karma}"
+                await ctx.send(embed=embed)
         else:
             user = ctx.author
             dbuser = dbfunctions.get_user(ctx.author)
@@ -195,13 +196,14 @@ class General(commands.Cog):
     async def activity(self, ctx, user: discord.User=None):
         if user is not None:
             if not user.bot:
+                user = Search.search_user(ctx, user)
                 dbuser = dbfunctions.get_user(user)
-            embed = discord.Embed(colour=user.color,
-                                  url=cfg.embed_url)
-            # Set embed fields and values
-            embed.set_author(name=f"{user}", icon_url=f"{user.avatar_url}")
-            embed.description = f":e_mail: Activity: {dbuser.activity_points}"
-            await ctx.send(embed=embed)
+                embed = discord.Embed(colour=user.color,
+                                      url=cfg.embed_url)
+                # Set embed fields and values
+                embed.set_author(name=f"{user}", icon_url=f"{user.avatar_url}")
+                embed.description = f":e_mail: Activity: {dbuser.activity_points}"
+                await ctx.send(embed=embed)
         else:
             user = ctx.author
             dbuser = dbfunctions.get_user(ctx.author)
@@ -216,13 +218,14 @@ class General(commands.Cog):
     async def tokens(self, ctx, user: discord.User=None):
         if user is not None:
             if not user.bot:
+                user = Search.search_user(ctx, user)
                 dbuser = dbfunctions.get_user(user)
-            embed = discord.Embed(colour=user.color,
-                                  url=cfg.embed_url)
-            # Set embed fields and values
-            embed.set_author(name=f"{user}", icon_url=f"{user.avatar_url}")
-            embed.description = f":moneybag: Tokens: {dbuser.tokens}"
-            await ctx.send(embed=embed)
+                embed = discord.Embed(colour=user.color,
+                                      url=cfg.embed_url)
+                # Set embed fields and values
+                embed.set_author(name=f"{user}", icon_url=f"{user.avatar_url}")
+                embed.description = f":moneybag: Tokens: {dbuser.tokens}"
+                await ctx.send(embed=embed)
         else:
             user = ctx.author
             dbuser = dbfunctions.get_user(ctx.author)
@@ -233,17 +236,18 @@ class General(commands.Cog):
             embed.description = f":moneybag: Tokens: {dbuser.tokens}"
             await ctx.send(embed=embed)
 
-    @commands.command(aliases=["m"])
+    @commands.command(aliases=["me", "m"])
     async def messages(self, ctx, user: discord.User=None):
         if user is not None:
             if not user.bot:
+                user = Search.search_user(ctx, user)
                 dbuser = dbfunctions.get_user(user)
-            embed = discord.Embed(colour=user.color, timestamp=ctx.message.created_at, title="*Questions?*",
-                                  url=cfg.embed_url)
-            # Set embed fields and values
-            embed.set_author(name=f"{user}", icon_url=f"{user.avatar_url}")
-            embed.description = f":speaking_head: Messages: {dbuser.messages_sent}"
-            await ctx.send(embed=embed)
+                embed = discord.Embed(colour=user.color,
+                                      url=cfg.embed_url)
+                # Set embed fields and values
+                embed.set_author(name=f"{user}", icon_url=f"{user.avatar_url}")
+                embed.description = f":speaking_head: Messages: {dbuser.messages_sent}"
+                await ctx.send(embed=embed)
         else:
             user = ctx.author
             dbuser = dbfunctions.get_user(ctx.author)
