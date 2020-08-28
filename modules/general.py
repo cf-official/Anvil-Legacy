@@ -203,7 +203,7 @@ class General(commands.Cog):
         else:
             user = Search.search_user(ctx, user)
 
-        dbuser = dbfunctions.get_user(ctx.author)
+        dbuser = dbfunctions.get_user(user)
         embed = discord.Embed(colour=user.color,
                               url=cfg.embed_url)
         # Set embed fields and values
@@ -218,7 +218,7 @@ class General(commands.Cog):
         else:
             user = Search.search_user(ctx, user)
 
-        dbuser = dbfunctions.get_user(ctx.author)
+        dbuser = dbfunctions.get_user(user)
         embed = discord.Embed(colour=user.color,
                               url=cfg.embed_url)
         # Set embed fields and values
@@ -233,7 +233,7 @@ class General(commands.Cog):
         else:
             user = Search.search_user(ctx, user)
 
-        dbuser = dbfunctions.get_user(ctx.author)
+        dbuser = dbfunctions.get_user(user)
         embed = discord.Embed(colour=user.color,
                               url=cfg.embed_url)
         # Set embed fields and values
