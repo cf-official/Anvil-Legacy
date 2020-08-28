@@ -18,12 +18,16 @@ class General(commands.Cog):
         await ctx.send(f'Pong! ({round(self.client.latency * 1000)}ms)')
 
     @commands.command(aliases=['uinfo', 'ui'])
-    async def userinfo(self, ctx, *, user=None):
+    async def userinfo(self, ctx, *, user: discord.User = None):
         # wait UIdrawer.request_ui_card()
         # await ctx.send(file=discord.File('support/uicard.png'))
 
         # Fetch relevant user and accompanying roles
-        user = Search.search_user(ctx, user)
+        if user is None or user.bot:
+            user = ctx.author
+        else:
+            user = Search.search_user(ctx, user)
+
         roles = [role for role in user.roles]
         # Slice @@everyone out of the list
         roles = roles[1:]
@@ -177,12 +181,70 @@ class General(commands.Cog):
         roll = random.randrange(0, max)
         await ctx.send(f"{ctx.author} rolled: {roll}")
 
+    @commands.command(aliases=["k"])
+    async def karma(self, ctx, user: discord.User = None):
+        if user is None or user.bot:
+            user = ctx.author
+        else:
+            user = Search.search_user(ctx, user)
+
+        dbuser = dbfunctions.get_user(user)
+        embed = discord.Embed(colour=user.color,
+                              url=cfg.embed_url)
+        # Set embed fields and values
+        embed.set_author(name=f"{user}", icon_url=f"{user.avatar_url}")
+        embed.description = f":angel: Karma: {dbuser.karma}"
+        await ctx.send(embed=embed)
+
+    @commands.command(aliases=["a"])
+    async def activity(self, ctx, user: discord.User = None):
+        if user is None or user.bot:
+            user = ctx.author
+        else:
+            user = Search.search_user(ctx, user)
+
+        dbuser = dbfunctions.get_user(ctx.author)
+        embed = discord.Embed(colour=user.color,
+                              url=cfg.embed_url)
+        # Set embed fields and values
+        embed.set_author(name=f"{user}", icon_url=f"{user.avatar_url}")
+        embed.description = f":e_mail: Activity: {dbuser.activity_points}"
+        await ctx.send(embed=embed)
+
+    @commands.command(aliases=["to"])
+    async def tokens(self, ctx, user: discord.User = None):
+        if user is None or user.bot:
+            user = ctx.author
+        else:
+            user = Search.search_user(ctx, user)
+
+        dbuser = dbfunctions.get_user(ctx.author)
+        embed = discord.Embed(colour=user.color,
+                              url=cfg.embed_url)
+        # Set embed fields and values
+        embed.set_author(name=f"{user}", icon_url=f"{user.avatar_url}")
+        embed.description = f":moneybag: Tokens: {dbuser.tokens}"
+        await ctx.send(embed=embed)
+
+    @commands.command(aliases=["me", "m"])
+    async def messages(self, ctx, user: discord.User = None):
+        if user is None or user.bot:
+            user = ctx.author
+        else:
+            user = Search.search_user(ctx, user)
+
+        dbuser = dbfunctions.get_user(ctx.author)
+        embed = discord.Embed(colour=user.color,
+                              url=cfg.embed_url)
+        # Set embed fields and values
+        embed.set_author(name=f"{user}", icon_url=f"{user.avatar_url}")
+        embed.description = f":speaking_head: Messages: {dbuser.messages_sent}"
+        await ctx.send(embed=embed)
 
 def get_ordinal(number):
     ordinal = lambda n: "%d%s" % (n, "tsnrhtdd"[(math.floor(n / 10) % 10 != 1) * (n % 10 < 4) * n % 10::4])
     result = ordinal(number)
     return result
-
 
 def setup(client):
     client.add_cog(General(client))
