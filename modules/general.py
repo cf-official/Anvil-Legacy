@@ -18,15 +18,12 @@ class General(commands.Cog):
         await ctx.send(f'Pong! ({round(self.client.latency * 1000)}ms)')
 
     @commands.command(aliases=['uinfo', 'ui'])
-    async def userinfo(self, ctx, *, user: discord.User = None):
+    async def userinfo(self, ctx, *, user=None):
         # wait UIdrawer.request_ui_card()
         # await ctx.send(file=discord.File('support/uicard.png'))
 
         # Fetch relevant user and accompanying roles
-        if user is None or user.bot:
-            user = ctx.author
-        else:
-            user = Search.search_user(ctx, user)
+        user = Search.search_user(ctx, user)
 
         roles = [role for role in user.roles]
         # Slice @@everyone out of the list
@@ -182,11 +179,10 @@ class General(commands.Cog):
         await ctx.send(f"{ctx.author} rolled: {roll}")
 
     @commands.command(aliases=["k"])
-    async def karma(self, ctx, user: discord.User = None):
+    async def karma(self, ctx, user=None):
+        user = Search.search_user(ctx, user)
         if user is None or user.bot:
             user = ctx.author
-        else:
-            user = Search.search_user(ctx, user)
 
         dbuser = dbfunctions.get_user(user)
         embed = discord.Embed(colour=user.color,
@@ -197,11 +193,10 @@ class General(commands.Cog):
         await ctx.send(embed=embed)
 
     @commands.command(aliases=["a"])
-    async def activity(self, ctx, user: discord.User = None):
+    async def activity(self, ctx, user=None):
+        user = Search.search_user(ctx, user)
         if user is None or user.bot:
             user = ctx.author
-        else:
-            user = Search.search_user(ctx, user)
 
         dbuser = dbfunctions.get_user(user)
         embed = discord.Embed(colour=user.color,
@@ -212,11 +207,10 @@ class General(commands.Cog):
         await ctx.send(embed=embed)
 
     @commands.command(aliases=["to"])
-    async def tokens(self, ctx, user: discord.User = None):
+    async def tokens(self, ctx, user=None):
+        user = Search.search_user(ctx, user)
         if user is None or user.bot:
             user = ctx.author
-        else:
-            user = Search.search_user(ctx, user)
 
         dbuser = dbfunctions.get_user(user)
         embed = discord.Embed(colour=user.color,
@@ -227,11 +221,10 @@ class General(commands.Cog):
         await ctx.send(embed=embed)
 
     @commands.command(aliases=["me", "m"])
-    async def messages(self, ctx, user: discord.User = None):
+    async def messages(self, ctx, user=None):
+        user = Search.search_user(ctx, user)
         if user is None or user.bot:
             user = ctx.author
-        else:
-            user = Search.search_user(ctx, user)
 
         dbuser = dbfunctions.get_user(user)
         embed = discord.Embed(colour=user.color,

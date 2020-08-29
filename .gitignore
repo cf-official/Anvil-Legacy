@@ -4,3 +4,4 @@ __pycache__
 .idea/workspace.xml
 .idea/discord.xml
 venv/
+.idea/inspectionProfiles/Project_Default.xml
