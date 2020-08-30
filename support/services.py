@@ -5,6 +5,7 @@ import random
 import os
 import operator
 import time
+import math
 import re
 import discord
 from support import log
@@ -151,7 +152,7 @@ def authority_check(arg_target_user, arg_user):
 # Makes it so the top users are displayed properly (shortening of names and stuff)
 def top_users_formatter(arg_list):
     new_list = []
-    username_max_length = 20
+    username_max_length = 32
     for x in arg_list:
         y = x.user
         if len(y) > username_max_length:
@@ -169,6 +170,24 @@ def attempt_chance(min_range, max_range, winning_range):
     result = True if roll <= winning_range else False
     return result, roll
 
+# Parse an amount value, if not int, determine value
+def parse_amount(amount, user_tokens):
+    if not is_int(amount):
+        if amount == "half":
+            amount = math.floor(user_tokens / 2)
+        elif amount in ["max", "all"]:
+            amount = user_tokens
+        elif "%" in amount:
+            amount = str(amount).replace("%", "")
+            if not is_int(amount):
+                return Exception("that amount is not valid!")
+            amount = math.floor(user_tokens / 100 * int(amount))
+        else:
+            return Exception("that amount is not valid!")
+    amount = int(amount)
+    if 0 >= amount or amount > user_tokens:
+        return Exception("you don't have enough tokens!")
+    return amount
 
 # React to a given message with a number, using numerical emoji...
 async def numerical_reaction(message, number):
@@ -189,7 +208,7 @@ async def failed_command_react(message):
 
 # Send a simple embed
 async def send_simple_embed(ctx, user, text):
-    embed = discord.Embed(colour=user.color, title=text)
+    embed = discord.Embed(colour=user.color, description=f"**{text}**")
     await ctx.send(embed=embed)
 
 

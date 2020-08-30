@@ -27,7 +27,7 @@ class General(commands.Cog):
 
         roles = [role for role in user.roles]
         # Slice @@everyone out of the list
-        roles = roles[1:]
+        roles = roles[1:].reverse()
         # Get user position in guild history (the Xth user to join the guild... that's still in the guild)
         position = sorted(ctx.guild.members, key=lambda x: x.joined_at).index(user) + 1
         ordinal = get_ordinal(position)
@@ -72,7 +72,7 @@ class General(commands.Cog):
         roles = [role for role in ctx.guild.roles]
         roles.reverse()
         # Remove last role (@@everyone)
-        roles = roles[:-1]
+        roles = roles[:-1].reverse()
 
         boosters = [booster for booster in ctx.guild.premium_subscribers]
         boosters.reverse()
@@ -150,13 +150,13 @@ class General(commands.Cog):
         # Check if lbtype matches any, else post default leaderboard
 
         # Fetch top ten users based on messages
-        if lbtype == "messages":
+        if lbtype == "messages" or lbtype == "m":
             header, results = dbfunctions.retrieve_top_messages(ctx.guild)
-        elif lbtype == "activity":
+        elif lbtype == "activity" or lbtype == "a":
             header, results = dbfunctions.retrieve_top_activity(ctx.guild)
-        elif lbtype == "karma":
+        elif lbtype == "karma" or lbtype == "k":
             header, results = dbfunctions.retrieve_top_karma(ctx.guild)
-        elif lbtype == "tokens":
+        elif lbtype == "tokens" or lbtype == "t":
             header, results = dbfunctions.retrieve_top_tokens(ctx.guild)
         # No type, or invalid type, was given. Return embed with instructions
         else:
@@ -174,7 +174,7 @@ class General(commands.Cog):
         await ctx.send(embed=embed)
 
     @commands.command()
-    async def roll(self, ctx, max=100):
+    async def random(self, ctx, max=100):
         roll = random.randrange(0, max)
         await ctx.send(f"{ctx.author} rolled: {roll}")
 
@@ -206,7 +206,7 @@ class General(commands.Cog):
         embed.description = f":e_mail: Activity: {dbuser.activity_points}"
         await ctx.send(embed=embed)
 
-    @commands.command(aliases=["to"])
+    @commands.command(aliases=["t", "to", "tk"])
     async def tokens(self, ctx, user=None):
         user = Search.search_user(ctx, user)
         if user is None or user.bot:

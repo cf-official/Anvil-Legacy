@@ -290,7 +290,7 @@ def retrieve_top_messages(arg_guild):
 
         # Create dict object to store user data in.
         dbuser = services.AttrDict()
-        dbuser.update({"user": str(guild_user.display_name), "value": user.messages_sent})
+        dbuser.update({"user": str(guild_user.mention), "value": user.messages_sent})
         top_list.append(dbuser)
 
         # maximum of 10 entries tyvm
@@ -320,7 +320,7 @@ def retrieve_top_activity(arg_guild):
 
         # Create dict object to store user data in.
         dbuser = services.AttrDict()
-        dbuser.update({"user": str(guild_user.display_name), "value": user.activity_points})
+        dbuser.update({"user": str(guild_user.mention), "value": user.activity_points})
         top_list.append(dbuser)
 
         # maximum of 10 entries tyvm
@@ -350,7 +350,7 @@ def retrieve_top_karma(arg_guild):
 
         # Create dict object to store user data in.
         dbuser = services.AttrDict()
-        dbuser.update({"user": str(guild_user.display_name), "value": user.karma})
+        dbuser.update({"user": str(guild_user.mention), "value": user.karma})
         top_list.append(dbuser)
 
         # maximum of 10 entries tyvm
@@ -380,7 +380,7 @@ def retrieve_top_tokens(arg_guild):
 
         # Create dict object to store user data in.
         dbuser = services.AttrDict()
-        dbuser.update({"user": str(guild_user.display_name), "value": user.tokens})
+        dbuser.update({"user": str(guild_user.mention), "value": user.tokens})
         top_list.append(dbuser)
 
         # maximum of 10 entries tyvm
