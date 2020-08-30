@@ -6,8 +6,7 @@ class Entertainment(commands.Cog):
     def __init__(self, client):
         self.client = client
 
-    @commands.command(name="8ball")
-    @commands.command(aliases=["8b"])
+    @commands.command(name="8ball", aliases=["8b"])
     async def eight_ball(self, ctx, *, question):
         responses = [   'It is certain',
                         'It is decidedly so',
