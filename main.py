@@ -14,42 +14,14 @@ SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://' + cfg.mysql['user'] + ':' + cfg.mys
 engine = sqlalchemy.create_engine(SQLALCHEMY_DATABASE_URI, echo=False)
 initialize_sql(engine)
 
-
 # Check custom guild prefix'
 def get_prefix(client, message):
     guild_prefix = dbfunctions.get_guild_prefix(message.guild) if message.guild is not None else cfg.default_prefix
     prefix = [cfg.default_prefix, guild_prefix]
     return prefix
 
-
 # Chosen prefix
 client = commands.Bot(command_prefix=get_prefix)
-
-
-# Loading modules
-@client.command(hidden=True)
-@commands.is_owner()
-async def load(ctx, extension):
-    extension = extension.lower()
-    try:
-        client.load_extension(f'modules.{extension}')
-    except:
-        logger.log(logger.ERROR, "Tried loading a module that either didn't exist or was already loaded")
-    else:
-        logger.log(logger.DEBUG, f"Loaded the module \"{extension}\".")
-
-
-# Unloading modules
-@client.command(hidden=True)
-@commands.is_owner()
-async def unload(ctx, extension):
-    extension = extension.lower()
-    try:
-        client.unload_extension(f'modules.{extension}')
-    except:
-        logger.log(logger.ERROR, "Tried unloading a module that either didn't exist or was already unloaded")
-    else:
-        logger.log(logger.DEBUG, f"Unloaded the module \"{extension}\".")
 
 # Loading all available modules on startup
 for filename in os.listdir('./modules'):

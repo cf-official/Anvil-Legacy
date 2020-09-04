@@ -1,7 +1,5 @@
 *config.py
 __pycache__
 *.pyc
-.idea/workspace.xml
-.idea/discord.xml
+.idea/
 venv/
-.idea/inspectionProfiles/Project_Default.xml
