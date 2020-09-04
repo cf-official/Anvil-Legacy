@@ -1,6 +1,6 @@
 # Anvil
 
-##### Official discord bot for [Codeforge](https://discord.gg/EYKxkce).
+#### Official discord bot for [Codeforge](https://discord.gg/EYKxkce).
 
 ### Prerequisites
 
