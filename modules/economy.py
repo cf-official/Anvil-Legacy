@@ -37,6 +37,10 @@ class Economy(commands.Cog):
             await services.send_simple_embed(ctx, ctx.author, f"I couldn't find any user from: ``{str(receiver)}``")
             await services.failed_command_react(ctx.message)
             return
+        elif receiver_user.id is ctx.author.id:
+            await services.send_simple_embed(ctx, ctx.author, f"{ctx.author.mention}, you can't give tokens to yourself, smh!")
+            await services.failed_command_react(ctx.message)
+            return
         elif receiver_user.bot:
             await services.send_simple_embed(ctx, ctx.author, f"You can't give tokens to a bot, smh {ctx.author.mention}!")
             await services.failed_command_react(ctx.message)
@@ -134,6 +138,7 @@ class Economy(commands.Cog):
         elif face < 1 or face > 6:
             await services.send_simple_embed(ctx, ctx.author, f"{ctx.author.mention}, a die only has 6 faces!")
             await services.failed_command_react(ctx.message)
+            return
 
         if not amount:
             await services.send_simple_embed(ctx, ctx.author, f"{ctx.author.mention}, you did not specify an amount!")
@@ -151,12 +156,17 @@ class Economy(commands.Cog):
             await services.failed_command_react(ctx.message)
             return
 
+        if (amount < 20):
+            await services.send_simple_embed(ctx, ctx.author, f"{ctx.author.mention}, you must bet at least 20 tokens!")
+            await services.failed_command_react(ctx.message)
+            return
+
         die_roll = random.randint(1, 6)
 
         embed = discord.Embed()
 
         if die_roll == face:
-            random_multi = random.randint(150, 200)
+            random_multi = random.randint(500, 575)
             winnings = math.floor(amount / 100 * int(random_multi))
 
             dbfunctions.update_user_tokens(ctx.guild, ctx.author, winnings)
