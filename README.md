@@ -17,4 +17,8 @@
 
 4. Activate the environment with ``conda activate`` and run ``pip install -r requirements.txt``.
 
-5. You can now start the bot with ``python main.py``.
+5. Copy ``codeforge/cfconfig.example.py`` to ``codeforge/cfconfig.py`` and make necessary changes.
+
+6. Copy ``support/config.example.py`` to ``support/config.py`` and make necessary changes.
+
+7. You can now start the bot with ``python main.py``.
